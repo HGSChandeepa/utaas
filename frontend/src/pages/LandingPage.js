@@ -15,7 +15,7 @@ const navigate = useNavigate();
       </div>
 
       <div className="text-center lg:ml-10">
-        <h1 className="text-[#4743E0] text-2xl lg:text-4xl font-extrabold mb-5 lg:mb-10 mt-10">
+        <h1 className="text-[#4743E0] text-2xl lg:text-6xl font-extrabold mb-5 lg:mb-10 mt-10">
           University Teachers’ Administrative Automation System
         </h1>
         <p className="mx-auto opacity-40 lg:w-1/2">

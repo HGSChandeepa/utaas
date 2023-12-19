@@ -14,7 +14,7 @@ const Login = (props) => {
     </div>
     <div className="text-center lg:ml-4 lg:mr-10 ">
       <div>
-        <h1 className="text-[#4743E0] text-xl lg:text-4xl font-extrabold mb-3 lg:mb-8 mt-5 lg:mt-10">
+        <h1 className="text-[#4743E0] text-xl lg:text-6xl font-extrabold mb-3 lg:mb-8 mt-5 lg:mt-10">
           Log Into Your Account
         </h1>
         <p className="mx-auto my-auto text-opacity-50 lg:w-1/2 opacity-40 text-center">
