@@ -99,7 +99,7 @@ const Register = (props) => {
             </div>
 
             <div className="w-36 mt-4 lg:mt-0">
-              <Button text="Register" />
+              <Button  onClick={()=> navigate(props.Register ? '/dashboard':'/login')}  text="Register"/>
             </div>
           </div>
         </div>
