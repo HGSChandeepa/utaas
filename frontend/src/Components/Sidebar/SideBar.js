@@ -22,8 +22,10 @@ function SideBar() {
                     className="flex flex-row px-2 py-1 space-x-4 rounded-lg  ml-4 w-52 border bg-blue-300"
                     onClick={() => {}}
                   >
-                    {item.icon}
-                    {item.title}
+                    <div className="pr-4">{item.icon}</div>
+                    <div>{item.title}</div>
+                    
+                    
                   </span>
                 </Link>
               </li>
