@@ -1,7 +1,7 @@
 import React from "react";
-import Image3 from "../assets/image3.svg";
-import Logo from "../Components/Logo/Logo";
-import Button from "../Components/Button/button";
+import Image3 from "../../assets/image3.svg";
+import Logo from "../../Components/Logo/Logo";
+import Button from "../../Components/Button/button";
 import { useNavigate } from "react-router-dom";
 
 const Login = (props) => {

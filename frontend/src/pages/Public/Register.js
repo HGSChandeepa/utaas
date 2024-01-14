@@ -1,9 +1,9 @@
 import React from "react";
-import Logo from "../Components/Logo/Logo";
-import Button from "../Components/Button/button";
-import Image3 from "../assets/image3.svg";
+import Logo from "../../Components/Logo/Logo";
+import Button from "../../Components/Button/button";
+import Image3 from "../../assets/image3.svg";
 import { useNavigate } from "react-router-dom";
-import Input from "../Components/Input/Input";
+import Input from "../../Components/Input/Input";
 
 const Register = (props) => {
   const navigate = useNavigate();

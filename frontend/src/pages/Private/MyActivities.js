@@ -1,26 +1,23 @@
-import React from "react";
-import Logo from "../Components/Logo/Logo";
-import SideNavBar from "../Components/SideNavBar/SideNavBar";
+import React from 'react'
+import SideBar from '../../Components/Sidebar/SideBar'
 
-
-
-const Dashboard = () => {
+const MyActivities = () => {
   return (
     <div className="flex flex-row">
       <div className="">
         <div className="place-items-start align-top items-center">
-          <Logo />
+          <SideBar />
         </div>
         <div className=" text-black w-64 h-full p-4">
-          <SideNavBar />
+          
         </div>
       </div>
 
       <div>
-        <h1>Dashboard</h1>
+        <h1>my fgdfgsd</h1>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default MyActivities

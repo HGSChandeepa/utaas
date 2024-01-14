@@ -1,7 +1,7 @@
 import React from "react";
-import Image1 from "../assets/image1.svg";
-import Image2 from "../assets/image2.svg";
-import Botton from "../Components/Button/button";
+import Image1 from "../../assets/image1.svg";
+import Image2 from "../../assets/image2.svg";
+import Botton from "../../Components/Button/button";
 import { useNavigate } from "react-router-dom";
 
 const LandingPage=(props)=>  {
