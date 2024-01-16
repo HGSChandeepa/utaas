@@ -3,7 +3,7 @@ import SideBar from '../../Components/Sidebar/SideBar'
 
 const Profile = () => {
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row ml-10 mt-10">
       <div className="">
         <div className="place-items-start align-top items-center">
           <SideBar />
