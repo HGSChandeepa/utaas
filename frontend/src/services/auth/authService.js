@@ -1,4 +1,16 @@
 //registerUser function
+import { auth, firestore } from "../../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { addDoc, collection } from "firebase/firestore";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { signOut } from "firebase/auth";
+import { GoogleAuthProvider } from "firebase/auth";
+import { signInWithPopup } from "firebase/auth";
+import { FacebookAuthProvider } from "firebase/auth";
+import { GithubAuthProvider } from "firebase/auth";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { doc } from "firebase/firestore";
+import { updateDoc } from "firebase/firestore";
 
 export const registerUser = async (email, password, userData) => {
   try {
