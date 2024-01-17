@@ -19,10 +19,10 @@ function SideBar() {
                   className="flex items-center text-black text-lg w-95 h-full pb-4 "
                 >
                   <span
-                    className="flex flex-row px-2 py-1 space-x-4 rounded-lg  ml-4 w-52 border bg-blue-300 items-center hover:bg-blue-400 hover:text-white"
+                    className="flex flex-row px-2 py-2 space-x-4 rounded-full  ml-4 w-52 border bg-blue-300 items-center hover:bg-blue-400 hover:text-white "
                     onClick={() => {}}
                   >
-                    <div className="pr-4">{item.icon}</div>
+                    <div className="pl-4">{item.icon}</div>
                     <div>{item.title}</div>
                   </span>
                 </Link>
