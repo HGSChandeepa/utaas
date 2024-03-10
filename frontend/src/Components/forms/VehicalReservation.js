@@ -10,6 +10,7 @@ const FormComponentVehicleReservation = () => {
     time: "",
     users: "",
     price: "",
+    form_type: "vehicle_reservation",
   });
 
   const handleChange = (e) => {
@@ -49,6 +50,7 @@ const FormComponentVehicleReservation = () => {
         time: "",
         users: "",
         price: "",
+        form_type: "vehicle_reservation",
       });
     } catch (error) {
       console.error("Error submitting form:", error.message);

@@ -11,7 +11,9 @@ const FormComponentExamDuty = () => {
     role: "",
     amount: "",
     department: "",
+    form_type: "exam_duty",
   });
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,6 +54,7 @@ const FormComponentExamDuty = () => {
         role: "",
         amount: "",
         department: "",
+        form_type: "exam_duty",
       });
     } catch (error) {
       console.error("Error submitting form:", error.message);

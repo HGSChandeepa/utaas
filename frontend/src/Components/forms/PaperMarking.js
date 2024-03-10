@@ -9,6 +9,7 @@ const FormComponentPaperMarking = () => {
     code: "",
     task: "",
     amount: "",
+    form_type: "paper_marking",
   });
 
   const handleChange = (e) => {
@@ -46,6 +47,7 @@ const FormComponentPaperMarking = () => {
         code: "",
         task: "",
         amount: "",
+        form_type: "paper_marking",
       });
     } catch (error) {
       console.error("Error submitting form:", error.message);
