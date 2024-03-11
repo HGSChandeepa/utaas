@@ -5,12 +5,15 @@ import SelectionCard from "../../Components/Admin/SectionCard";
 import { SaveAllIcon } from "lucide-react";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const MyActivities = () => {
   const [userData, setUserData] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [fromType, setFromType] = useState("");
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(0);
 
   const handleOptionClick = (value) => {
     if (selectedOptions.includes(value)) {
@@ -97,6 +100,8 @@ const MyActivities = () => {
         userRole: newUserRole,
         selectedOption: selectedOptions,
         fromType: fromType,
+        numberOfSections: numberOfSections,
+        userData: userData,
       }));
     }
   };
@@ -109,8 +114,12 @@ const MyActivities = () => {
         allSelectionCardData
       );
       console.log("Document written with ID: ", newDocRef.id);
+      //add toast
+      toast.success("New Form Added Successfully");
     } catch (error) {
       console.error("Error adding document: ", error);
+      //add toast
+      toast.error("Error adding new form");
     }
   };
 
@@ -136,7 +145,9 @@ const MyActivities = () => {
             <option value="" disabled>
               Select the form type
             </option>
-            <option value="Vehical Reservation Form">Vehical Reservation Form</option>
+            <option value="Vehical Reservation Form">
+              Vehical Reservation Form
+            </option>
             <option value="Exam Duty Form">Exam Duty Form</option>
             <option value="Cleaning Service Form">Cleaning Service Form</option>
             <option value="Paper Marking Form">Paper Marking Form</option>
@@ -144,9 +155,26 @@ const MyActivities = () => {
 
           {/* select appicable */}
 
+          <div className=" mb-10">
+            <label
+              for="last_name"
+              class="block mb-2 text-sm font-medium text-gray-900 "
+            >
+              Number Of Application Required
+            </label>
+            <input
+              type="number"
+              id="last_name"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full block  p-2.5   "
+              placeholder="12"
+              required
+              onSubmit={(e) => setNumberOfSections(e.target.value)}
+            />
+          </div>
+
           <div className="">
             <h3 className="mb-4 font-semibold text-gray-900">Identification</h3>
-            <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex  dark:border-gray-600 dark:text-white">
+            <ul className="items-center    text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex  dark:border-gray-600 dark:text-white">
               <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
                 <div className="flex items-center ps-3">
                   <input
