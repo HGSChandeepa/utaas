@@ -51,10 +51,12 @@ const Register = (props) => {
       );
 
       const user = userCredential.user;
+      const userId = user.uid;
       console.log(user.uid);
       const usersCollection = collection(firestore, "users");
       const userData = {
         firstName,
+        userId,
         lastName,
         department,
         role,
@@ -64,6 +66,8 @@ const Register = (props) => {
 
       const docRef = await addDoc(usersCollection, userData);
       console.log("User data added to Firestore with ID: ", docRef.id);
+      //storethe userid in the local storage
+      localStorage.setItem("userId", docRef.id);
       navigate("/dashboard");
     } catch (error) {
       console.error("Error registering user:", error.message);
@@ -168,9 +172,10 @@ const Register = (props) => {
                   <option value="" disabled>
                     Select a role
                   </option>
-                  <option value="Head of Department">HoD</option>
+                  <option value="HOD">HOD</option>
                   <option value="Admin">Admin</option>
-                  <option value="user">Lecturer</option>
+                  <option value="Lecturer">Lecturer</option>
+                  <option value="Instructor">Instructor</option>
                 </select>
                 <input
                   label={"Confirm Password"}
