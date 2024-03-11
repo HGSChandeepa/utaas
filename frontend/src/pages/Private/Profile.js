@@ -169,7 +169,7 @@ const ProfilePage = () => {
                   name={"email"}
                   value={userData.email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
+                  className="border rounded-full py-2 px-3 mb-24 text-grey-darker w-72"
                 />
               </div>
             </div>
@@ -183,7 +183,7 @@ const ProfilePage = () => {
               <label className="lg:ml-2 mb-2">Password</label>
               <input
                 label={"Password"}
-                type={"text"}
+                type={"password"}
                 placeholder={"*******"}
                 name={"password"}
                 className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72 mb-10"
@@ -208,12 +208,12 @@ const ProfilePage = () => {
                 <label className="lg:ml-2 mb-2">Confirm Password</label>
                 <input
                   label={"Confirm Password"}
-                  type={"text"}
+                  type={"password"}
                   placeholder={"*******"}
                   name={"confirmPassword"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="border rounded-full py-2 px-4 mb-4 text-grey-darker w-73"
+                  className="border rounded-full py-2 px-4 mb-28 text-grey-darker w-72"
                 />
               </div>
             </div>

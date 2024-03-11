@@ -14,6 +14,7 @@ const MyActivities = () => {
   const [fromType, setFromType] = useState("");
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(0);
+  const [applcationAmount, setApplicationAmount] = useState(0);
 
   const handleOptionClick = (value) => {
     if (selectedOptions.includes(value)) {
@@ -99,6 +100,7 @@ const MyActivities = () => {
         cards: [...prevData.cards, sectionData[numberOfSections - 1]],
         userRole: newUserRole,
         selectedOption: selectedOptions,
+        applcationAmount: applcationAmount,
         fromType: fromType,
         numberOfSections: numberOfSections,
         userData: userData,
@@ -109,11 +111,11 @@ const MyActivities = () => {
   const saveNewProduct = async () => {
     try {
       const db = getFirestore();
-      const newDocRef = await addDoc(
-        collection(db, newUserRole),
-        allSelectionCardData
-      );
-      console.log("Document written with ID: ", newDocRef.id);
+      // const newDocRef = await addDoc(
+      //   collection(db, newUserRole),
+      //   allSelectionCardData
+      // );
+      // console.log("Document written with ID: ", newDocRef.id);
       //add toast
       toast.success("New Form Added Successfully");
     } catch (error) {
@@ -168,7 +170,8 @@ const MyActivities = () => {
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full block  p-2.5   "
               placeholder="12"
               required
-              onSubmit={(e) => setNumberOfSections(e.target.value)}
+            
+              onSubmit={(e) => setApplicationAmount(e.target.value)}
             />
           </div>
 
