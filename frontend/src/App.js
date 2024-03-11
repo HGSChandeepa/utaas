@@ -9,6 +9,8 @@ import Tasks from "./pages/Private/Tasks";
 import Progress from "./pages/Private/Progress";
 import Favorites from "./pages/Private/Favorites";
 import Profile from "./pages/Private/Profile";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -23,8 +25,10 @@ function App() {
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/progress" element={<Progress />} />
           <Route path="/favorites" element={<Favorites />} />
-          <Route path="/profile" element={<Profile/>} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
+
+        <ToastContainer />
       </div>
     </>
   );
