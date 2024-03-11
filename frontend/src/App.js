@@ -1,14 +1,15 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import LandingPage from "./pages/Public/LandingPage";
-import Login from "./pages/Public/Login";
-import Register from "./pages/Public/Register";
-import Dashboard from "./pages/Private/Dashboard";
-import MyActivities from "./pages/Private/MyActivities";
-import Tasks from "./pages/Private/Tasks";
-import Progress from "./pages/Private/Progress";
-import Favorites from "./pages/Private/Favorites";
-import Profile from "./pages/Private/Profile";
+import LandingPage from "./pages/public/LandingPage";
+import Login from "./pages/public/Login";
+import Register from "./pages/public/Register";
+import Dashboard from "./pages/private/Dashboard";
+import MyActivities from "./pages/private/MyActivities";
+import Tasks from "./pages/private/Tasks";
+import Progress from "./pages/private/Progress";
+import Favorites from "./pages/private/Favorites";
+import Profile from "./pages/private/Profile";
+
 
 function App() {
   return (

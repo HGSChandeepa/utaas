@@ -1,5 +1,6 @@
 import React from "react";
 import SideBar from "../../Components/Sidebar/SideBar";
+import Card from "../../Components/Card/Card";
 
 const Dashboard = () => {
   return (
@@ -13,6 +14,9 @@ const Dashboard = () => {
 
       <div>
         <h1>Dashboard</h1>
+        <div>
+          <Card />
+        </div>
       </div>
     </div>
   );
