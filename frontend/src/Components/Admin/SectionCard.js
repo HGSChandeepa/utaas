@@ -26,8 +26,8 @@ function SelectionCard({ index, sectionData, updateSectionData }) {
     updateSectionData(index, {
       input: value,
       selectedOption,
-      dropdownData,
-      multiSelectData,
+      // dropdownData,
+      // multiSelectData,
     });
   };
 
@@ -36,8 +36,8 @@ function SelectionCard({ index, sectionData, updateSectionData }) {
     updateSectionData(index, {
       input,
       selectedOption: value,
-      dropdownData,
-      multiSelectData,
+      // dropdownData,
+      // multiSelectData,
     });
   };
 
@@ -56,8 +56,8 @@ function SelectionCard({ index, sectionData, updateSectionData }) {
     updateSectionData(index, {
       input,
       selectedOption,
-      dropdownData: updatedFields,
-      multiSelectData,
+      // dropdownData: updatedFields,
+      // multiSelectData,
     });
   };
 
@@ -68,32 +68,32 @@ function SelectionCard({ index, sectionData, updateSectionData }) {
     updateSectionData(index, {
       input,
       selectedOption,
-      dropdownData,
-      multiSelectData: updatedFields,
+      // dropdownData,
+      // multiSelectData: updatedFields,
     });
   };
 
-  const handleRemoveDropdownField = (index) => {
-    const updatedFields = dropdownFields.filter((_, i) => i !== index);
-    setDropdownFields(updatedFields);
-    updateSectionData(index, {
-      input,
-      selectedOption,
-      dropdownData: updatedFields,
-      multiSelectData,
-    });
-  };
+  // const handleRemoveDropdownField = (index) => {
+  //   const updatedFields = dropdownFields.filter((_, i) => i !== index);
+  //   setDropdownFields(updatedFields);
+  //   updateSectionData(index, {
+  //     input,
+  //     selectedOption,
+  //     dropdownData: updatedFields,
+  //     multiSelectData,
+  //   });
+  // };
 
-  const handleRemoveMultiSelectField = (index) => {
-    const updatedFields = multiSelectFields.filter((_, i) => i !== index);
-    setMultiSelectFields(updatedFields);
-    updateSectionData(index, {
-      input,
-      selectedOption,
-      dropdownData,
-      multiSelectData: updatedFields,
-    });
-  };
+  // const handleRemoveMultiSelectField = (index) => {
+  //   const updatedFields = multiSelectFields.filter((_, i) => i !== index);
+  //   setMultiSelectFields(updatedFields);
+  //   updateSectionData(index, {
+  //     input,
+  //     selectedOption,
+  //     dropdownData,
+  //     multiSelectData: updatedFields,
+  //   });
+  // };
 
   const renderSelectedOption = () => {
     switch (selectedOption) {
@@ -160,18 +160,18 @@ function SelectionCard({ index, sectionData, updateSectionData }) {
               <FormatColorTextIcon />
               <span className="px-2">Text</span>
             </MenuItem>
-            <MenuItem value="dropdown">
+            {/* <MenuItem value="dropdown">
               <ArrowDropDownCircleIcon />
               <span className="px-2">Dropdown</span>
             </MenuItem>
             <MenuItem value="multiSelect">
               <ControlPointDuplicateIcon />
               <span className="px-2">Multiple Selects</span>
-            </MenuItem>
+            </MenuItem> */}
           </Select>
         </FormControl>
 
-        {selectedOption === "dropdown" && (
+        {/* {selectedOption === "dropdown" && (
           <div className="mt-3">
             {dropdownFields.map((field, index) => (
               <div key={index} className="flex items-center gap-2 my-2">
@@ -228,7 +228,7 @@ function SelectionCard({ index, sectionData, updateSectionData }) {
               </div>
             </IconButton>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
