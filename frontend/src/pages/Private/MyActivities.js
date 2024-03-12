@@ -15,6 +15,7 @@ const MyActivities = () => {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(0);
   const [numberOfApplication, setNumberOfApplication] = useState(0);
+  const [userid, setUserid] = useState(null);
 
   const handleOptionClick = (value) => {
     if (selectedOptions.includes(value)) {
@@ -30,6 +31,7 @@ const MyActivities = () => {
     const fetchUserData = async () => {
       try {
         const userId = localStorage.getItem("userId");
+        setUserid(userId);
         console.log(userId);
         const db = getFirestore();
         const userDataRef = doc(db, "users", userId);
@@ -115,7 +117,14 @@ const MyActivities = () => {
         collection(db, newUserRole),
         allSelectionCardData
       );
-      console.log("Document written with ID: ", newDocRef.id);
+
+      //also store under user collection
+      const userDocRef = await addDoc(
+        collection(db, "users", userid, "forms"),
+        allSelectionCardData
+      );
+
+      console.log("Document written with ID: ", userid);
       // add toast
       toast.success("New Form Added Successfully");
     } catch (error) {
