@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { firestore } from "../../config/firebase_configure";
+import { TiEdit } from "react-icons/ti";
 
 const FormComponentExamDuty = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +14,6 @@ const FormComponentExamDuty = () => {
     department: "",
     form_type: "exam_duty",
   });
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,10 +62,22 @@ const FormComponentExamDuty = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-gray-100 rounded-md shadow-md">
+    <div className="max-w-md mx-auto mt-8 p-6 bg-gray-50 rounded-md shadow-md">
       <h2 className=" text-2xl font-semibold text-blue-600 border-b-4">
         Exam Duties
       </h2>
+      <section className=" py-5">
+        <div className="flex flex-row justify-between items-center">
+          <div className="flex gap-2">
+            {/* <button className="bg-red-100 text-red-800 flex items-center gap-4   font-medium px-4 py-2 rounded-full text-md">
+                            Delete <FiDelete />
+                          </button> */}
+            <button className="bg-yellow-100 text-yellow-800 flex items-center gap-4   font-medium px-4 py-2 rounded-full text-md">
+              Add In To Favourites <TiEdit />
+            </button>
+          </div>
+        </div>
+      </section>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label

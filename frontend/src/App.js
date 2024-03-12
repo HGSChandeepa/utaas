@@ -11,6 +11,7 @@ import Favorites from "./pages/Private/Favorites";
 import Profile from "./pages/Private/Profile";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ExamDuty from "./pages/Private/DashboardPages/ExamDuty";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/progress" element={<Progress />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/dashboard/exam" element={<ExamDuty />} />
         </Routes>
 
         <ToastContainer />

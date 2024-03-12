@@ -85,10 +85,12 @@ const Dashboard = () => {
               </div>
               {/* cards */}
               <div className=" mt-5 grid grid-cols-3 gap-5">
-                <SampleCards
-                  title="Exam Duty Forms"
-                  description="Go to this step by step guideline process on how to certify for your weekly benefits."
-                />{" "}
+                <a href="/dashboard/exam">
+                  <SampleCards
+                    title="Exam Duty Forms"
+                    description="Go to this step by step guideline process on how to certify for your weekly benefits."
+                  />{" "}
+                </a>
                 <SampleCards
                   title="Vehical Resevation Forms"
                   description="Go to this step by step guideline process on how to certify for your weekly benefits."
