@@ -4,6 +4,9 @@ import { getFirestore, doc, getDoc, getDocs } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { TiEdit } from "react-icons/ti";
+
+import { FiDelete } from "react-icons/fi";
 
 const Tasks = () => {
   const [userData, setUserData] = useState(null);
@@ -28,6 +31,20 @@ const Tasks = () => {
           setUserRole(userData.role);
           setUserFormType(userData.role + "forms");
           setUserEmail(userData.email);
+
+          // Fetch user forms from a separate collection
+          const userFormsCollectionRef = collection(
+            db,
+            "users",
+            userId,
+            "forms"
+          );
+          const userFormsSnapshot = await getDocs(userFormsCollectionRef);
+          const userFormsData = userFormsSnapshot.docs.map((doc) => doc.data());
+          setUserForms(userFormsData);
+
+          console.log("User Data:", userData);
+          console.log("User Forms:", userFormsData);
         } else {
           console.log("No such document!");
         }
@@ -39,37 +56,7 @@ const Tasks = () => {
     fetchUserData();
   }, []);
 
-  console.log(userFormType);
-
   ///fethch all forms from tthis user from the userFormType collection
-
-  useEffect(() => {
-    const fetchUserForms = async () => {
-      try {
-        const db = getFirestore();
-        const userFormsRef = collection(db, userFormType);
-        const userFormsSnapshot = await getDocs(userFormsRef);
-
-        userFormsSnapshot.forEach((doc) => {
-          const userFormData = doc.data();
-
-          //fetch all the forms for the user with the email
-          if (userEmail === userFormData.userData.email) {
-            console.log(userFormData);
-            //insert the form data into the userForms state
-            setUserForms((prev) => [...prev, userFormData]);
-          }
-        });
-
-        setUserForms(userFormsSnapshot);
-      } catch (error) {
-        console.error("Error fetching user forms:", error);
-      }
-    };
-    if (userFormType) {
-      fetchUserForms();
-    }
-  }, [userFormType]);
 
   console.log(userForms[0]);
 
@@ -85,8 +72,8 @@ const Tasks = () => {
             <div className="place-items-start align-top items-center">
               <SideBar />
             </div>
-            <div className="bg-yellow-100 text-yellow-800 w-36  font-medium px-2.5 py-0.5 rounded-full text-md">
-              {userRole} Account
+            <div className="bg-yellow-100 text-yellow-800 w-40 flex gap-2 font-medium px-4 py-0.5 rounded-full text-md">
+              {userRole} <span>Account</span>
             </div>
           </div>
           <div className="flex flex-col gap-5">
@@ -103,7 +90,67 @@ const Tasks = () => {
               </p>
             </div>
             {/* cards */}
-            <div className=" mt-5 grid grid-cols-3 gap-5"></div>
+            <div className="flex flex-col gap-5">
+              <div className=" w-[1200px]">
+                {userForms.map((formData, index) => (
+                  <div
+                    key={index}
+                    className="bg-white  p-4 rounded-lg shadow-md flex flex-row justify-between gap-3 mt-5 hover:bg-slate-100 cursor-pointer transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-101"
+                  >
+                    <div>
+                      <h3 className="text-lg font-semibold text-blue-700 ">
+                        Form Information {formData.formType}
+                      </h3>
+
+                      <div className=" flex gap-10 mt-3 ">
+                        <p className="  bg-yellow-100 text-yellow-800   font-medium px-4 py-0.5 rounded-full text-md">
+                          {formData.userData.firstName}{" "}
+                          {formData.userData.lastName}
+                        </p>
+                        <p className="  bg-yellow-100 text-yellow-800   font-medium px-4 py-0.5 rounded-full text-md">
+                          {formData.userData.email}{" "}
+                        </p>
+                        <p className="  bg-yellow-100 text-yellow-800   font-medium px-4 py-0.5 rounded-full text-md">
+                          {formData.userData.department}{" "}
+                        </p>
+                      </div>
+                      <div className=" mt-5">
+                        <p className="pb-3 ">
+                          <h2 className=" mb-3">applications form</h2>
+                          {formData.selectedOption.map((option, index) => (
+                            <span
+                              className="  bg-blue-100 text-blue-800   font-medium px-4 py-0.5 rounded-full text-md"
+                              key={index}
+                            >
+                              {option}
+                            </span>
+                          ))}
+                        </p>
+                        <hr />
+                        <p className="mt-3">
+                          Number Of Applicaions : {formData.numberOfApplication}{" "}
+                        </p>
+                        <p className=" mt-3 ">
+                          Number Of Applicaions : {formData.numberOfSections}{" "}
+                        </p>
+                      </div>
+                    </div>
+                    <section>
+                      <div className="flex flex-row justify-between items-center">
+                        <div className="flex gap-2">
+                          <button className="bg-red-100 text-red-800 flex items-center gap-4   font-medium px-4 py-2 rounded-full text-md">
+                            Delete <FiDelete />
+                          </button>
+                          <button className="bg-blue-100 text-blue-800 flex items-center gap-4   font-medium px-4 py-2 rounded-full text-md">
+                            Edit <TiEdit />
+                          </button>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
