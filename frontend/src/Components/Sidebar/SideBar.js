@@ -1,9 +1,11 @@
-import React from "react";
+import {React, useHistory, useState} from "react";
 import { Link } from "react-router-dom";
 import { SidebarData } from "./SidebarData";
 import Logo from "../Logo/Logo";
+import { CiLogout } from "react-icons/ci";
 
 function SideBar() {
+
   return (
     <>
       <div className="">
@@ -28,6 +30,12 @@ function SideBar() {
                 </Link>
               </li>
             ))}
+            <span className="flex flex-row justify-end px-2 py-2 mt-96 space-x-4 ml-4 w-52 text-slate-700 hover:text-black cursor-pointer ">
+              <div className="pl-4 flex flex-row mx-1 mb-0" onClick={()=>{}}>
+                <CiLogout />
+                <p className="ml-2 mb-2">Logout</p>
+              </div>
+            </span>
           </ul>
         </nav>
       </div>
