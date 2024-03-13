@@ -128,7 +128,7 @@ const Tasks = () => {
                         </p>
                         <hr />
                         <p className="mt-3">
-                          Number Of Applicaions : {formData.numberOfApplication}{" "}
+                          Number Of Submitions : {formData.numberOfApplication}{" "}
                         </p>
                         <p className=" mt-3 ">
                           Number Of Applicaions : {formData.numberOfSections}{" "}

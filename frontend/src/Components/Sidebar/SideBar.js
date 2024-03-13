@@ -1,18 +1,43 @@
-import {React, useHistory, useState} from "react";
+import {React, useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import { SidebarData } from "./SidebarData";
 import Logo from "../Logo/Logo";
 import { CiLogout } from "react-icons/ci";
 
 function SideBar() {
+  const [open, setOpen] = useState(true);
+
+  const handleResize = () => {
+    // Close the sidebar when the window width is less than or equal to a certain threshold (e.g., 768px)
+    if (window.innerWidth <= 1200) {
+      setOpen(false);
+    } else {
+      setOpen(true);
+    }
+  };
+
+  // Add event listener for window resizing
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <>
-      <div className="">
+      <div >
         <nav
-          className={`bg-white-300 h-full flex justify-center fixed top-0 left-0 transition-transform duration-350 bg-slate-50 px-5`}
+          className={`bg-white-300 h-full flex justify-center fixed top-0 left-0 transition-transform duration-350 bg-slate-50 px-5
+         `}
         >
-          <ul className=" ">
+          <ul 
+          // className= {` ${
+          //   open ? "w-72" : "w-16"
+          // } `} 
+          >
             <Logo />
             {SidebarData.map((item, index) => (
               <li key={index} className={`${item.cName} nav-tex`}>
