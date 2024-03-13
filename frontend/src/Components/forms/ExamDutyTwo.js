@@ -5,7 +5,7 @@ import { TiEdit } from "react-icons/ti";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const FormComponentExamDuty = () => {
+const FormComponentExamDutyTwo = () => {
   const [formData, setFormData] = useState({
     date: "",
     time: "",
@@ -140,7 +140,7 @@ const FormComponentExamDuty = () => {
             className="block text-gray-600 font-semibold mb-2"
             htmlFor="location"
           >
-            Application For
+            Location
           </label>
           <input
             type="text"
@@ -157,7 +157,7 @@ const FormComponentExamDuty = () => {
             className="block text-gray-600 font-semibold mb-2"
             htmlFor="duty"
           >
-            Possible Time and Date
+            Duty
           </label>
           <input
             type="text"
@@ -174,7 +174,7 @@ const FormComponentExamDuty = () => {
             className="block text-gray-600 font-semibold mb-2"
             htmlFor="role"
           >
-            Applying Position
+            Role
           </label>
           <input
             type="text"
@@ -191,7 +191,7 @@ const FormComponentExamDuty = () => {
             className="block text-gray-600 font-semibold mb-2"
             htmlFor="amount"
           >
-            No Of Days
+            Amount
           </label>
           <input
             type="text"
@@ -216,4 +216,4 @@ const FormComponentExamDuty = () => {
   );
 };
 
-export default FormComponentExamDuty;
+export default FormComponentExamDutyTwo;

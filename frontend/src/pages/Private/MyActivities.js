@@ -75,17 +75,7 @@ const MyActivities = () => {
     setSectionData(updatedData);
   };
 
-  // const storeSectionData = () => {
-  //   const exists = allSelectionCardData.cards.some((card) => {
-  //     return JSON.stringify(card) === JSON.stringify(sectionData[0]);
-  //   });
 
-  //   if (!exists) {
-  //     setAllSelectionCardData({
-  //       cards: [...allSelectionCardData.cards, ...sectionData],
-  //     });
-  //   }
-  // };
 
   const newUserRole = userRole + "forms";
   const storeSectionData = () => {
