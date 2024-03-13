@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SideBar from "../../../Components/Sidebar/SideBar";
 import FormComponentExamDuty from "../../../Components/forms/ExamDuty";
+import FormComponentExamDutyTwo from "../../../Components/forms/ExamDutyTwo";
 
 function ExamDuty() {
   const [userData, setUserData] = useState(null);
@@ -81,8 +82,9 @@ function ExamDuty() {
                 in the form below and submitting it to your department head. You
                 will be notified of the status of your application.
               </p>
-              <div>
+              <div className="grid grid-cols-2">
                 <FormComponentExamDuty />
+                <FormComponentExamDutyTwo />
               </div>
             </div>
           </div>
