@@ -90,7 +90,7 @@ const Tasks = () => {
               </p>
             </div>
             {/* cards */}
-            <div className="flex flex-col gap-5">
+            {/* <div className="flex flex-col gap-5">
               <div className=" w-[1200px]">
                 {userForms.map((formData, index) => (
                   <div
@@ -138,9 +138,7 @@ const Tasks = () => {
                     <section>
                       <div className="flex flex-row justify-between items-center">
                         <div className="flex gap-2">
-                          {/* <button className="bg-red-100 text-red-800 flex items-center gap-4   font-medium px-4 py-2 rounded-full text-md">
-                            Delete <FiDelete />
-                          </button> */}
+                          
                           <button className="bg-blue-100 text-blue-800 flex items-center gap-4   font-medium px-4 py-2 rounded-full text-md">
                             Remove Form Favourites <TiEdit />
                           </button>
@@ -150,7 +148,7 @@ const Tasks = () => {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
