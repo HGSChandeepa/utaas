@@ -46,16 +46,16 @@ const ProfilePage = () => {
     }
   };
   return (
-    <div className="flex flex-row ml-10 mt-10">
+    <div className="flex flex-row">
       <div className="">
         <div className="place-items-start align-top items-center">
           <SideBar />
         </div>
-        <div className=" text-black w-64 h-full p-4"></div>
+        
       </div>
 
       {userData ? (
-        <div>
+        <div className="p-5">
           <div className="flex flex-row items-center justify-around">
             <h1 className="text-[#4743E0] text-lg lg:text-6xl font-extrabold mb-3 lg:mb-8 mt-5 lg:mt-10">
               Welcome, {userData.firstName} {userData.lastName}
@@ -81,13 +81,13 @@ const ProfilePage = () => {
         onChange={handleProfilePic}
       />
           </div>
-          <p className="mx-auto my-auto text-opacity-50 lg:w-1/2 lg:ml-0 opacity-40">
+          <p className="mx-auto my-auto text-opacity-50 pl-16 lg:w-1/2 lg:ml-0 opacity-40">
             To access your account, please enter your credentials below. By
             logging in, you agree to our terms and conditions. Make sure to
             review our GDPR compliance for data protection.
           </p>
           <hr className="mx-auto border-dashed rounded-md w-[1000%] lg:w-[1000px] mt-12 mb-5" />
-          <label className="text-[#4743E0] lg:ml-0 font-semibold mb-2 ">
+          <label className="text-[#4743E0] pl-16 lg:ml-0 font-semibold mb-2 ">
             Change the Profile Details
           </label>
           <div className="flex flex-col lg:flex-row justify-around py-2 my-5">
@@ -175,7 +175,7 @@ const ProfilePage = () => {
             </div>
           </div>
           <hr className="mx-auto border-dashed rounded-md w-[1000%] lg:w-[1000px] mt-12 mb-5" />
-          <label className="text-[#4743E0] lg:ml-0 font-semibold mb-2 ">
+          <label className="text-[#4743E0] pl-16 lg:ml-0 font-semibold mb-2 ">
             Change the Password
           </label>
           <div className="flex flex-col lg:flex-row justify-around py-2 my-5">

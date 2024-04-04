@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import { SidebarData } from "./SidebarData";
 import Logo from "../Logo/Logo";
 import { CiLogout } from "react-icons/ci";
+import { TiThMenu } from "react-icons/ti";
 
 function SideBar() {
   const [open, setOpen] = useState(true);
   const [isActive, setIsActive] = useState(true);
+
   const location = window.location.pathname;
   const handleResize = () => {
     // Close the sidebar when the window width is less than or equal to a certain threshold (e.g., 768px)
@@ -33,29 +35,44 @@ function SideBar() {
 
   return (
     <>
-      <div>
+      <div
+        className={`grid grid-flow-col  overflow-hidden top-0 left-0 h-full ${
+          open ? "w-72" : "w-16 "
+        }`}
+      >
         <nav
-          className={`bg-white-300 h-full flex justify-center fixed top-0 left-0 transition-transform duration-350 bg-slate-50 px-5
+          className={`bg-white-300 h-full flex justify-center  transition-transform duration-350 bg-slate-50
          `}
         >
-          <ul
-          // className= {` ${
-          //   open ? "w-72" : "w-16"
-          // } `}
-          >
-            <Logo />
+          <ul>
+            <div className={`flex flex-row justify-between `}>
+              <TiThMenu
+                width={50}
+                height={50}
+                size={30}
+                onClick={() => setOpen(!open)}
+                className={`cursor-pointer mt-8 ${open && "w-72" ? "" :"ml-4" }`}
+              />
+              <Logo className="bg-black"/>
+            </div>
             {SidebarData.map((item, index) => (
-              <li key={index} className={`${item.cName} nav-tex`}>
+              <li
+                key={index}
+                className={`${item.cName} ${open && "w-72" ? "" :"hidden  "} `}
+              >
                 <Link
                   to={item.path}
                   className="flex items-center text-black text-lg w-95 h-full pb-4 "
                   onClick={onClickHandler}
                 >
                   <span
-                   
                     className={`flex flex-row px-2 py-2 space-x-4 rounded-full  ml-4 w-52 border bg-blue-300 items-center
                      hover:bg-blue-500 hover:text-white 
-                     ${isActive && location === item.path ? "bg-blue-900 text-white" : "text-black"}`}
+                     ${
+                       isActive && location === item.path
+                         ? "bg-blue-900 text-white"
+                         : "text-black"
+                     }`}
                   >
                     <div className="pl-4">{item.icon}</div>
                     <div className={``}>{item.title}</div>

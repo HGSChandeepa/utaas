@@ -31,16 +31,15 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="flex flex-col ml-[300px] ">
-      <div className="">
-        <div className="place-items-start align-top items-center">
-          <SideBar />
-        </div>
-        <div className=" text-black w-64 h-full p-4"></div>
+    <div className="flex flex-row ">
+      <div className="place-items-start align-top items-center">
+        <SideBar />
       </div>
 
-      <div className=" flex gap-10">
-        <div className="flex  justify-between gap-[500px] items-center">
+
+      <div className="p-5">
+      <div className=" flex flex-col gap-10">
+        <div className="flex justify-between gap-[500px] items-center">
           <div>
             {userData ? (
               <div className=" flex gap-3">
@@ -107,6 +106,7 @@ const Dashboard = () => {
             </div>
           </div>
         </section>
+      </div>
       </div>
     </div>
   );

@@ -128,15 +128,15 @@ const MyActivities = () => {
   console.log(allSelectionCardData);
 
   return (
-    <div className="flex flex-row ml-10 mt-10">
+    <div className="flex flex-row">
       <div className="">
         <div className="place-items-start align-top items-center">
           <SideBar />
         </div>
-        <div className=" text-black w-64 h-full p-4"></div>
+        
       </div>
 
-      <div>
+      <div  className="p-5">
         <section>
           <select
             className="border-2 rounded-full py-2 px-3 mb-4 text-grey-100 bg-slate-100 w-72"
