@@ -90,7 +90,7 @@ const Tasks = () => {
             </div>
             {/* cards */}
             <div className="flex flex-col gap-5">
-              {/* <div className=" w-[1200px]">
+              <div className=" w-[1200px]">
                 {userForms.map((formData, index) => (
                   <div
                     key={index}
@@ -148,7 +148,7 @@ const Tasks = () => {
                     </section>
                   </div>
                 ))}
-              </div> */}
+              </div>
             </div>
           </div>
         </div>
