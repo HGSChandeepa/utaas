@@ -5,6 +5,8 @@ import { auth } from "../../config/firebase_configure";
 import { doc, getDoc } from "firebase/firestore";
 import { firestore } from "../../config/firebase_configure";
 
+import { getExamForms } from "../../services/progress/progress_exam_duty";
+
 const Dashboard = () => {
   const [userData, setUserData] = useState(null);
   const [userRole, setUserRole] = useState(null);
@@ -36,6 +38,15 @@ const Dashboard = () => {
     });
 
     return unsubscribe;
+  }, []);
+
+  //get all forms data
+  const [examForms, setExamForms] = useState([]);
+  useEffect(() => {
+    getExamForms().then((data) => {
+      setExamForms(data);
+      console.log(data);
+    });
   }, []);
 
   return (

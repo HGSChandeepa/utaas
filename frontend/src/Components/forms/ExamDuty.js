@@ -6,11 +6,13 @@ import "react-toastify/dist/ReactToastify.css";
 import { auth } from "../../config/firebase_configure";
 import { doc, getDoc } from "firebase/firestore";
 import { firestore } from "../../config/firebase_configure";
+import { useNavigate } from "react-router-dom";
 
 const FormComponentExamDuty = () => {
+  //navigation
+  const navigate = useNavigate();
   //fetch the user data
   const [userData, setUserData] = useState(null);
-  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -26,7 +28,6 @@ const FormComponentExamDuty = () => {
 
               setUserData(userData);
               console.log(userData);
-              setUserRole(userData.role);
             } else {
               console.log("No such document!");
             }
@@ -49,8 +50,14 @@ const FormComponentExamDuty = () => {
     applicant_name: userData && userData.userName,
     applicant_email: userData && userData.userEmail,
     no_of_steps: 3,
-    first_reciver_email: "",
-    second_reciver_email: "",
+    visible_to: ["Lecturer", "HOD", "Instructor"],
+    form_type: "exam_duty",
+    edited_by_first_reciver: false,
+    edited_by_second_reciver: false,
+    edited_by_third_reciver: false,
+    current_step: 1,
+    first_reciver_email: "rajitha@eie.ruh.ac.lk",
+    second_reciver_email: "admin123@gmail.com",
     first_reciver_role: "HOD",
     second_reciver_role: "Admin",
     duty: "",
@@ -65,6 +72,17 @@ const FormComponentExamDuty = () => {
       ...prevData,
       applicant_name: userData && userData.userName,
       applicant_email: userData && userData.userEmail,
+      no_of_steps: 3,
+      visible_to: ["Lecturer", "HOD", "Instructor"],
+      form_type: "exam_duty",
+      edited_by_first_reciver: true,
+      edited_by_second_reciver: false,
+      edited_by_third_reciver: false,
+      current_step: 2,
+      first_reciver_email: "rajitha@eie.ruh.ac.lk",
+      second_reciver_email: "admin123@gmail.com",
+      first_reciver_role: "HOD",
+      second_reciver_role: "Admin",
     }));
   }, [userData]);
 
@@ -96,8 +114,18 @@ const FormComponentExamDuty = () => {
 
     try {
       console.log("Form submitted with data:", formData);
+      //store the form data in the firestore under the collection name exam_duty
+      const docRef = await addDoc(collection(firestore, "exam_duty"), formData);
+      console.log("Document written with ID: ", docRef.id);
+      // add toast
+      toast.success("Form submitted successfully");
+
+      //navigate to the dashboard
+      navigate("/dashboard");
     } catch (error) {
       console.error("Error submitting form:", error.message);
+      // add toast
+      toast.error("Error submitting form: " + error.message);
     }
   };
 
