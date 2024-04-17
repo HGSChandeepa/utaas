@@ -1,59 +1,45 @@
 import React, { useEffect, useState } from "react";
-import { getFirestore, doc, getDoc, getDocs } from "firebase/firestore";
-import { collection, addDoc } from "firebase/firestore";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SideBar from "../../../Components/Sidebar/SideBar";
 import FormComponentExamDuty from "../../../Components/forms/ExamDuty";
 import FormComponentExamDutyTwo from "../../../Components/forms/ExamDutyTwo";
+import { auth } from "../../../config/firebase_configure";
+import { doc, getDoc } from "firebase/firestore";
+import { firestore } from "../../../config/firebase_configure";
 
 function ExamDuty() {
   const [userData, setUserData] = useState(null);
   const [userRole, setUserRole] = useState(null);
-  const [userid, setUserId] = useState(null);
-  const [userFormType, setUserFormType] = useState(null);
-  const [userEmail, setUserEmail] = useState(null);
-  const [userForms, setUserForms] = useState([]);
+
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userId = localStorage.getItem("userId");
-        setUserId(userId);
-        console.log(userId);
-        const db = getFirestore();
-        const userDataRef = doc(db, "users", userId);
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        console.log(user.uid);
+        const docRef = doc(firestore, "users", user.uid);
+        const docSnap = getDoc(docRef);
+        //set the user data to the state
+        docSnap
+          .then((doc) => {
+            if (doc.exists()) {
+              const userData = doc.data();
 
-        const userDataSnapshot = await getDoc(userDataRef);
-        if (userDataSnapshot.exists()) {
-          const userData = userDataSnapshot.data();
-          setUserData(userData);
-          setUserRole(userData.role);
-          setUserFormType(userData.role + "forms");
-          setUserEmail(userData.email);
-
-          // Fetch user forms from a separate collection
-          const userFormsCollectionRef = collection(
-            db,
-            "users",
-            userId,
-            "forms"
-          );
-          const userFormsSnapshot = await getDocs(userFormsCollectionRef);
-          const userFormsData = userFormsSnapshot.docs.map((doc) => doc.data());
-          setUserForms(userFormsData);
-
-          console.log("User Data:", userData);
-          console.log("User Forms:", userFormsData);
-        } else {
-          console.log("No such document!");
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+              setUserData(userData);
+              setUserRole(userData.role);
+            } else {
+              console.log("No such document!");
+            }
+          })
+          .catch((error) => {
+            console.error("Error getting document:", error);
+          });
+      } else {
+        setUserData(null);
       }
-    };
+    });
 
-    fetchUserData();
+    return unsubscribe;
   }, []);
+
   return (
     <div>
       <div className="flex flex-row ml-10 mt-10">
@@ -84,7 +70,6 @@ function ExamDuty() {
               </p>
               <div className="grid grid-cols-2">
                 <FormComponentExamDuty />
-                <FormComponentExamDutyTwo />
               </div>
             </div>
           </div>

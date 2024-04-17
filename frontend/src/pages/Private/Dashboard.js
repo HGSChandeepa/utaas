@@ -1,33 +1,41 @@
 import React, { useEffect, useState } from "react";
 import SideBar from "../../Components/Sidebar/SideBar";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
 import SampleCards from "../../Components/Cards/SampleCards";
+import { auth } from "../../config/firebase_configure";
+import { doc, getDoc } from "firebase/firestore";
+import { firestore } from "../../config/firebase_configure";
 
 const Dashboard = () => {
   const [userData, setUserData] = useState(null);
   const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userId = localStorage.getItem("userId");
-        console.log(userId);
-        const db = getFirestore();
-        const userDataRef = doc(db, "users", userId);
-        const userDataSnapshot = await getDoc(userDataRef);
-        if (userDataSnapshot.exists()) {
-          console.log(userDataSnapshot.data());
-          setUserData(userDataSnapshot.data());
-          setUserRole(userDataSnapshot.data().role);
-        } else {
-          console.log("No such document!");
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        console.log(user.uid);
+        const docRef = doc(firestore, "users", user.uid);
+        const docSnap = getDoc(docRef);
+        //set the user data to the state
+        docSnap
+          .then((doc) => {
+            if (doc.exists()) {
+              const userData = doc.data();
 
-    fetchUserData();
+              setUserData(userData);
+              setUserRole(userData.role);
+            } else {
+              console.log("No such document!");
+            }
+          })
+          .catch((error) => {
+            console.error("Error getting document:", error);
+          });
+      } else {
+        setUserData(null);
+      }
+    });
+
+    return unsubscribe;
   }, []);
 
   return (
@@ -47,11 +55,9 @@ const Dashboard = () => {
                 <p className=" text-2xl text-gray-500">Hello</p>
                 <p className=" text-2xl font-semibold text-blue-600">
                   {" "}
-                  {userData.firstName}
+                  {userData.userName}
                 </p>
-                <p className=" text-2xl font-semibold text-blue-600">
-                  {userData.lastName}
-                </p>
+
                 <p className=" text-2xl text-gray-500"> Welcome Back!</p>
               </div>
             ) : (

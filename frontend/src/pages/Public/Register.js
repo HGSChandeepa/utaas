@@ -3,8 +3,10 @@ import Logo from "../../Components/Logo/Logo";
 import Image3 from "../../assets/image3.svg";
 import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { firestore } from "../../config/firebase_configure";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = (props) => {
   const navigate = useNavigate();
@@ -35,11 +37,16 @@ const Register = (props) => {
       !confirmPassword
     ) {
       console.error("Please fill in all fields");
+
+      //show a toast message
+      toast.error("Please fill in all fields");
       return;
     }
 
     if (password !== confirmPassword) {
       console.error("Passwords do not match");
+      //show a toast message
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -50,29 +57,30 @@ const Register = (props) => {
         password
       );
 
+      //save the user in firestore users collection under the user id
       const user = userCredential.user;
-      const userId = user.uid;
-      console.log(user.uid);
-      const usersCollection = collection(firestore, "users");
-      const userData = {
-        firstName,
-        userId,
-        lastName,
-        department,
-        role,
-        contactNumber,
-        email,
-      };
+      const userRef = doc(firestore, "users", user.uid); // Set document ID to user's UID
+      await setDoc(userRef, {
+        // Pass the data to be added to the Firestore document as an object
+        uid: user.uid,
+        userEmail: email,
+        userName: `${firstName} ${lastName}`,
+        department: department,
+        role: role,
+        contactNumber: contactNumber,
+      });
 
-      const docRef = await addDoc(usersCollection, userData);
-      console.log("User data added to Firestore with ID: ", docRef.id);
-      //storethe userid in the local storage
-      localStorage.setItem("userId", docRef.id);
+      //show a toast message
+      toast.success("User registered successfully");
+
       navigate("/dashboard");
     } catch (error) {
       console.error("Error registering user:", error.message);
+      //show a toast message
+      toast.error("Error registering user: " + error.message);
     }
   };
+
   return (
     <div className="flex flex-col lg:flex-row justify-between items-center">
       <div className="bg-white flex flex-col justify-normal items-center rounded px-4 lg:px-8 py-4 lg:pt-6 lg:pb-8 mx-auto lg:items-center lg:w-[900px]">

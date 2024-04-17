@@ -1,22 +1,69 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { collection, addDoc } from "firebase/firestore";
-import { firestore } from "../../config/firebase_configure";
 import { TiEdit } from "react-icons/ti";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { auth } from "../../config/firebase_configure";
+import { doc, getDoc } from "firebase/firestore";
+import { firestore } from "../../config/firebase_configure";
 
 const FormComponentExamDuty = () => {
+  //fetch the user data
+  const [userData, setUserData] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        console.log(user.uid);
+        const docRef = doc(firestore, "users", user.uid);
+        const docSnap = getDoc(docRef);
+        //set the user data to the state
+        docSnap
+          .then((doc) => {
+            if (doc.exists()) {
+              const userData = doc.data();
+
+              setUserData(userData);
+              console.log(userData);
+              setUserRole(userData.role);
+            } else {
+              console.log("No such document!");
+            }
+          })
+          .catch((error) => {
+            console.error("Error getting document:", error);
+          });
+      } else {
+        setUserData(null);
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  //form data
   const [formData, setFormData] = useState({
     date: "",
-    time: "",
     location: "",
+    applicant_name: userData && userData.userName,
+    applicant_email: userData && userData.userEmail,
     duty: "",
     role: "",
     amount: "",
     department: "",
     form_type: "exam_duty",
   });
+  //include user name and email in the form data
+  useEffect(() => {
+    setFormData((prevData) => ({
+      ...prevData,
+      applicant_name: userData && userData.userName,
+      applicant_email: userData && userData.userEmail,
+    }));
+  }, [userData]);
 
+  //handle form change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -30,7 +77,6 @@ const FormComponentExamDuty = () => {
 
     if (
       !formData.date ||
-      !formData.time ||
       !formData.location ||
       !formData.duty ||
       !formData.role ||
@@ -38,44 +84,63 @@ const FormComponentExamDuty = () => {
       !formData.department
     ) {
       console.error("Please fill in all fields");
+      // add toast
+      toast.error("Please fill in all fields");
       return;
     }
 
     try {
-      // Add the form data to Firestore
-      const formsCollection = collection(firestore, "ExamDutyForms");
-      await addDoc(formsCollection, formData);
-
       console.log("Form submitted with data:", formData);
-      // add toast
-      toast.success("New Form Added Successfully");
-      // Optionally, you can reset the form data after submission
-      setFormData({
-        date: "",
-        time: "",
-        location: "",
-        duty: "",
-        role: "",
-        amount: "",
-        department: "",
-        form_type: "ExamDutyForms",
-      });
     } catch (error) {
       console.error("Error submitting form:", error.message);
     }
   };
 
   return (
-    <div className="w-[500px] mx-auto mt-8 p-6 bg-gray-50 rounded-md shadow-md">
+    <div className="w-[1000px] mx-auto my-8 p-6 bg-slate-100 rounded-md shadow-md  border-2">
       <h2 className=" text-2xl font-semibold text-blue-600 border-b-4">
         Exam Duties
       </h2>
+      <p className=" my-8 text-slate-500">
+        This form is submitted by Admin and please fill this form before 2 days
+        ( 48 hours). Exam duty form is used to apply for exam duty. Please fill
+        in the form.
+      </p>
+
+      <div className=" my-5 bg-slate-300 p-4 rounded-full cursor-pointer">
+        <ol class="items-center w-full space-y-4 sm:flex sm:space-x-8 sm:space-y-0 rtl:space-x-reverse">
+          <li class="flex items-center text-blue-600 dark:text-blue-500 space-x-2.5 rtl:space-x-reverse">
+            <span class="flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
+              1
+            </span>
+            <span>
+              <h3 class="font-medium leading-tight">User info</h3>
+              <p class="text-sm">Step details here</p>
+            </span>
+          </li>
+          <li class="flex items-center text-gray-500 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
+            <span class="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">
+              2
+            </span>
+            <span>
+              <h3 class="font-medium leading-tight">HOD review</h3>
+              <p class="text-sm">Second approval</p>
+            </span>
+          </li>
+          <li class="flex items-center text-gray-500 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
+            <span class="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">
+              3
+            </span>
+            <span>
+              <h3 class="font-medium leading-tight">Admin Finalization</h3>
+              <p class="text-sm">Final Step</p>
+            </span>
+          </li>
+        </ol>
+      </div>
       <section className=" py-5">
         <div className="flex flex-row justify-between items-center">
           <div className="flex gap-2">
-            {/* <button className="bg-red-100 text-red-800 flex items-center gap-4   font-medium px-4 py-2 rounded-full text-md">
-                            Delete <FiDelete />
-                          </button> */}
             <button className="bg-yellow-100 text-yellow-800 flex items-center gap-4   font-medium px-4 py-2 rounded-full text-md">
               Add In To Favourites <TiEdit />
             </button>
@@ -96,24 +161,9 @@ const FormComponentExamDuty = () => {
             name="date"
             value={formData.date}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
-          />
-        </div>
+            //defaultValue as now"
 
-        <div className="mb-4">
-          <label
-            className="block text-gray-600 font-semibold mb-2"
-            htmlFor="time"
-          >
-            Time
-          </label>
-          <input
-            type="time"
-            id="time"
-            name="time"
-            value={formData.time}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+            className=" px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
 
@@ -133,6 +183,39 @@ const FormComponentExamDuty = () => {
             <option value="Mechanical">MME</option>
             <option value="IS">IS</option>
           </select>
+        </div>
+
+        <div className="mb-4">
+          <label
+            className="block text-gray-600 font-semibold mb-2"
+            htmlFor="location"
+          >
+            Applicant Name
+          </label>
+          <input
+            type="text"
+            id="location"
+            name="location"
+            value={userData && userData.userName}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            className="block text-gray-600 font-semibold mb-2"
+            htmlFor="location"
+          >
+            Applicant Email
+          </label>
+          <input
+            type="text"
+            id="location"
+            name="location"
+            value={userData && userData.userEmail}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+          />
         </div>
 
         <div className="mb-4">

@@ -5,7 +5,7 @@ import SelectionCard from "../../Components/Admin/SectionCard";
 import { SaveAllIcon } from "lucide-react";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const MyActivities = () => {
