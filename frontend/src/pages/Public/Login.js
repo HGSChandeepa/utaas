@@ -73,11 +73,18 @@ const Login = () => {
             <div className="mt-3 lg:mt-4 w-full lg:w-36">
               <Button text="Log In" onClick={handleLogin} />
             </div>
-            <div className="mt-3 lg:mt-4 flex items-center">
-              <h1>Don't have an account?</h1>
-              <button className="text-[#4743E0] ml-2">Register</button>
-            </div>
           </form>
+          <div className="mt-3 lg:mt-4 flex items-center">
+            <h1>Don't have an account?</h1>
+            <button
+              onClick={() => {
+                navigate("/register");
+              }}
+              className="text-[#4743E0] ml-2"
+            >
+              Register
+            </button>
+          </div>
         </div>
       </div>
       <div className="bg-black bg-opacity-5">

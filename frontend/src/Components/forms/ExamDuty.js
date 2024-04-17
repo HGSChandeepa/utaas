@@ -48,6 +48,11 @@ const FormComponentExamDuty = () => {
     location: "",
     applicant_name: userData && userData.userName,
     applicant_email: userData && userData.userEmail,
+    no_of_steps: 3,
+    first_reciver_email: "",
+    second_reciver_email: "",
+    first_reciver_role: "HOD",
+    second_reciver_role: "Admin",
     duty: "",
     role: "",
     amount: "",
@@ -97,7 +102,7 @@ const FormComponentExamDuty = () => {
   };
 
   return (
-    <div className="w-[1000px] mx-auto my-8 p-6 bg-slate-100 rounded-md shadow-md  border-2">
+    <div className="w-[1000px] mx-auto my-8 p-6 bg-slate-100 rounded-md   border-2">
       <h2 className=" text-2xl font-semibold text-blue-600 border-b-4">
         Exam Duties
       </h2>
