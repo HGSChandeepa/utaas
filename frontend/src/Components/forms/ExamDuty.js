@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { TiEdit } from "react-icons/ti";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { auth } from "../../config/firebase_configure";
 import { doc, getDoc } from "firebase/firestore";
@@ -64,7 +64,6 @@ const FormComponentExamDuty = () => {
     role: "",
     amount: "",
     department: "",
-    form_type: "exam_duty",
   });
   //include user name and email in the form data
   useEffect(() => {

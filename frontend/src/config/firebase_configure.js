@@ -6,7 +6,7 @@ import "firebase/compat/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDRVNsvFA-hNOZ2O5-dAlujXaQ9nCKwtAc",
-  authDomain: "utaas-e8cb2.firebaseapp.com",
+  authDomain: "utaas-e8cb2.firebaseapp.com/login",
   projectId: "utaas-e8cb2",
   storageBucket: "utaas-e8cb2.appspot.com",
   messagingSenderId: "693800414447",
