@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { TiEdit } from "react-icons/ti";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { auth } from "../../config/firebase_configure";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../config/firebase_configure";
 import { useNavigate } from "react-router-dom";
 
@@ -52,9 +52,6 @@ const FormComponentExamDuty = () => {
     no_of_steps: 3,
     visible_to: ["Lecturer", "HOD", "Instructor"],
     form_type: "exam_duty",
-    edited_by_first_reciver: false,
-    edited_by_second_reciver: false,
-    edited_by_third_reciver: false,
     current_step: 1,
     first_reciver_email: "rajitha@eie.ruh.ac.lk",
     second_reciver_email: "admin123@gmail.com",
@@ -64,6 +61,13 @@ const FormComponentExamDuty = () => {
     role: "",
     amount: "",
     department: "",
+    edited_by_applicant: true,
+    edited_by_first_reciver: false,
+    edited_by_second_reciver: false,
+    appvover_by_first_reciver: false,
+    appvover_by_second_reciver: false,
+    rejected_by_first_reciver: false,
+    rejected_by_second_reciver: false,
   });
   //include user name and email in the form data
   useEffect(() => {
@@ -74,14 +78,19 @@ const FormComponentExamDuty = () => {
       no_of_steps: 3,
       visible_to: ["Lecturer", "HOD", "Instructor"],
       form_type: "exam_duty",
-      edited_by_first_reciver: true,
-      edited_by_second_reciver: false,
-      edited_by_third_reciver: false,
+      applicant_filled_time: new Date().toLocaleString(),
       current_step: 2,
       first_reciver_email: "rajitha@eie.ruh.ac.lk",
       second_reciver_email: "admin123@gmail.com",
       first_reciver_role: "HOD",
       second_reciver_role: "Admin",
+      edited_by_applicant: true,
+      edited_by_first_reciver: false,
+      edited_by_second_reciver: false,
+      appvover_by_first_reciver: false,
+      appvover_by_second_reciver: false,
+      rejected_by_first_reciver: false,
+      rejected_by_second_reciver: false,
     }));
   }, [userData]);
 
@@ -113,17 +122,22 @@ const FormComponentExamDuty = () => {
 
     try {
       console.log("Form submitted with data:", formData);
-      //store the form data in the firestore under the collection name exam_duty
+      // Store the form data in the Firestore under the collection name exam_duty
       const docRef = await addDoc(collection(firestore, "exam_duty"), formData);
       console.log("Document written with ID: ", docRef.id);
-      // add toast
+
+      // Update the Firestore document with the form_id
+      const formDocRef = doc(firestore, "exam_duty", docRef.id);
+      await updateDoc(formDocRef, { form_id: docRef.id });
+
+      // Add toast
       toast.success("Form submitted successfully");
 
-      //navigate to the dashboard
+      // Navigate to the dashboard
       navigate("/dashboard");
     } catch (error) {
       console.error("Error submitting form:", error.message);
-      // add toast
+      // Add toast
       toast.error("Error submitting form: " + error.message);
     }
   };

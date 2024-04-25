@@ -5,6 +5,7 @@ import { GrTask } from "react-icons/gr";
 import { GrInProgress } from "react-icons/gr";
 import { GrFavorite } from "react-icons/gr";
 import { CgProfile } from "react-icons/cg";
+import { IoIosNotifications } from "react-icons/io";
 export const SidebarData = [
   {
     title: "Dashboard",
@@ -34,6 +35,12 @@ export const SidebarData = [
     title: "Favorites",
     path: "/favorites",
     icon: <GrFavorite />,
+    cName: "nav-text",
+  },
+  {
+    title: "Alerts",
+    path: "/notifications",
+    icon: <IoIosNotifications />,
     cName: "nav-text",
   },
   {

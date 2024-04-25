@@ -97,20 +97,37 @@ const Progress = () => {
                       <h1>
                         Form Submited Sucessfully:{" "}
                         <span className=" text-blue-500">
-                          {form.edited_by_first_reciver.toString()}
+                          {form.edited_by_applicant.toString()}
+                        </span>
+                      </h1>
+                      <br />
+                      <h1>
+                        Edited By the Firse Reviver {form.first_reciver_email}
+                        <span className=" text-blue-500">
+                          : {form.edited_by_first_reciver.toString()}
                         </span>
                       </h1>
                       <h1>
+                        Edited By the Second Reviver {form.second_reciver_email}
+                        :
+                        <span className=" text-blue-500">
+                          {form.edited_by_second_reciver.toString()}{" "}
+                        </span>
+                      </h1>
+
+                      <br />
+
+                      <h1>
                         Approved By the Firse Reviver {form.first_reciver_email}
                         <span className=" text-blue-500">
-                          : {form.edited_by_second_reciver.toString()}
+                          : {form.appvover_by_first_reciver.toString()}
                         </span>
                       </h1>
                       <h1>
                         Approved By the Second Reviver{" "}
                         {form.second_reciver_email}:
                         <span className=" text-blue-500">
-                          {form.edited_by_third_reciver.toString()}{" "}
+                          {form.appvover_by_second_reciver.toString()}{" "}
                         </span>
                       </h1>
                     </div>

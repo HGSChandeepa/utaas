@@ -12,6 +12,7 @@ import Profile from "./pages/Private/Profile";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ExamDuty from "./pages/Private/DashboardPages/ExamDuty";
+import Notifications from "./pages/Private/Notifications";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/progress" element={<Progress />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/notifications" element={<Notifications />} />
           <Route path="/dashboard/exam" element={<ExamDuty />} />
         </Routes>
 
