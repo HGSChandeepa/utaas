@@ -88,7 +88,7 @@ const Tasks = () => {
                   notifications.map((notification, index) => (
                     <div
                       key={index}
-                      className="bg-slate-100 shadow-md rounded-md p-4"
+                      className="bg-slate-100 shadow-md rounded-md p-4 mb-5"
                     >
                       <div className="flex justify-between items-center">
                         <div>

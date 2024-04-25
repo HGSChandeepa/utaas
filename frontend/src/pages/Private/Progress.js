@@ -10,9 +10,6 @@ const Progress = () => {
   const [examDutyForms, setExamDutyForms] = useState([]);
   const [userData, setUserData] = useState(null);
   const [userRole, setUserRole] = useState(null);
-  const [examForms, setExamForms] = useState([]);
-  const [toBeFirstReviewedForms, setToBeFirstReviewedForms] = useState(null);
-  const [toBeSecondReviewedForms, setToBeSecondReviewedForms] = useState(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -45,7 +42,6 @@ const Progress = () => {
         if (userData) {
           const data = await getAllFormsByCurrentUser(userData.userEmail);
           setExamDutyForms(data);
-          console.log(data);
         }
       } catch (error) {
         console.error("Error:", error);
@@ -89,7 +85,7 @@ const Progress = () => {
               <div className=" w-[1200px]">
                 {examDutyForms.map((form, index) => {
                   return (
-                    <div key={index} className=" p-5 bg-slate-100">
+                    <div key={index} className=" p-5 bg-slate-100 mb-5">
                       <h1>{form.applicant_name}</h1>
                       <h1>{form.applicant_email}</h1>
                       <h1>{form.department}</h1>
