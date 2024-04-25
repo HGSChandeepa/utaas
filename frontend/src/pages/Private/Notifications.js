@@ -3,10 +3,13 @@ import SideBar from "../../Components/Sidebar/SideBar";
 import { auth } from "../../config/firebase_configure";
 import { doc, getDoc } from "firebase/firestore";
 import { firestore } from "../../config/firebase_configure";
+import "react-toastify/dist/ReactToastify.css";
+import { getNotifications } from "../../services/progress/progress_exam_duty";
 
 const Tasks = () => {
   const [userData, setUserData] = useState(null);
   const [userRole, setUserRole] = useState(null);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -37,6 +40,22 @@ const Tasks = () => {
     return unsubscribe;
   }, []);
 
+  //get all the notifications for the current user
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (userData) {
+          const data = await getNotifications(userData.userEmail);
+          setNotifications(data);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchData();
+  }, [userData]);
+
   return (
     <div className="flex flex-row ml-10 mt-10">
       <div className="">
@@ -64,7 +83,38 @@ const Tasks = () => {
             </div>
             {/* cards */}
             <div className="flex flex-col gap-5">
-              <div className=" w-[1200px]"></div>
+              <div className=" w-[1200px]">
+                {notifications.length > 0 ? (
+                  notifications.map((notification, index) => (
+                    <div
+                      key={index}
+                      className="bg-slate-100 shadow-md rounded-md p-4"
+                    >
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <h1 className="text-lg">
+                            {notification.formData.form_type}
+                          </h1>
+                          <p className="text-gray-500">
+                            {notification.message}
+                          </p>
+                        </div>
+                        <div>
+                          <button className="bg-green-500 text-white px-4 py-2 rounded-md">
+                            View
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="bg-white shadow-md rounded-md p-4">
+                    <h1 className="text-xl font-semibold text-center">
+                      No Notifications
+                    </h1>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

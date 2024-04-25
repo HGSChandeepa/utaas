@@ -1,4 +1,11 @@
-import { collection, getDocs, doc, setDoc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  setDoc,
+  getDoc,
+  addDoc,
+} from "firebase/firestore";
 import { firestore } from "../../config/firebase_configure";
 
 //function to get all the exam docs in the firestore collection exam_forms store them in an array and return the array
@@ -44,6 +51,7 @@ export const getAllFormsByCurrentUser = async (email) => {
 };
 
 // methode to approve by the first reviewer
+
 export const approveByFirstReviewer = async (formId) => {
   const examFormRef = doc(collection(firestore, "exam_duty"), formId);
   const examFormDoc = await getDoc(examFormRef);
@@ -54,7 +62,36 @@ export const approveByFirstReviewer = async (formId) => {
       { appvover_by_first_reciver: true },
       { merge: true }
     );
+
+    // Create a new document in the "notifications" collection
+    try {
+      const notificationRef = collection(firestore, "notifications");
+      await addDoc(notificationRef, {
+        message: `Form ${formId} has been approved by the first reviewer.`,
+        formData: examFormDoc.data(), // Add form data to the notification
+        timestamp: new Date(),
+      });
+    } catch (error) {
+      console.error("Error adding notification document: ", error);
+    }
+
+    console.log("Form approved by the first reviewer.");
   } else {
-    console.log("Form not found for the specified email and form ID.");
+    console.log("Form not found for the specified form ID.");
   }
+};
+
+//function to get all the notifications for the current user
+export const getNotifications = async (email) => {
+  const notifications = [];
+  const notificationsCollection = collection(firestore, "notifications");
+  const notificationsSnapshot = await getDocs(notificationsCollection);
+  notificationsSnapshot.forEach((doc) => {
+    const notificationData = doc.data();
+    if (notificationData.formData.applicant_email.trim() === email.trim()) {
+      notifications.push(notificationData);
+    }
+  });
+
+  return notifications;
 };
