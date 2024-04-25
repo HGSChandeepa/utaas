@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import SideBar from "../../../Components/Sidebar/SideBar";
-import FormComponentExamDuty from "../../../Components/forms/ExamDuty";
-import FormComponentExamDutyTwo from "../../../Components/forms/ExamDutyTwo";
+import FormComponentExamDuty from "../../../Components/forms/exam_duty/ExamDuty";
+import FormComponentExamDutyTwo from "../../../Components/forms/exam_duty/ExamDutyTwo";
 import { auth } from "../../../config/firebase_configure";
 import { doc, getDoc } from "firebase/firestore";
 import { firestore } from "../../../config/firebase_configure";

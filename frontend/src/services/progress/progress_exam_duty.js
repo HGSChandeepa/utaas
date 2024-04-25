@@ -82,6 +82,18 @@ export const getAllFormsByCurrentUser = async (email) => {
   return examForms;
 };
 
+//methode to get the form by the form id
+export const getFormById = async (formId) => {
+  const examFormRef = doc(collection(firestore, "exam_duty"), formId);
+  const examFormDoc = await getDoc(examFormRef);
+
+  if (examFormDoc.exists()) {
+    return examFormDoc.data();
+  } else {
+    console.log("Form not found for the specified form ID.");
+  }
+};
+
 // methode to approve by the first reviewer
 
 export const approveFirstReviewerService = async (formId) => {
@@ -138,6 +150,141 @@ export const approveSecondReviewerService = async (formId) => {
     }
 
     console.log("Form approved by the second reviewer.");
+  } else {
+    console.log("Form not found for the specified form ID.");
+  }
+};
+
+//methode to reject by the first reviewer and send notification to the applicant
+export const rejectFirstReviewerService = async (formId) => {
+  const examFormRef = doc(collection(firestore, "exam_duty"), formId);
+  const examFormDoc = await getDoc(examFormRef);
+
+  if (examFormDoc.exists()) {
+    await setDoc(
+      examFormDoc.ref,
+      {
+        appvover_by_first_reciver: false,
+        rejected_by_first_reciver: true,
+        current_step: 3,
+      },
+      { merge: true }
+    );
+
+    // Create a new document in the "notifications" collection
+    try {
+      const notificationRef = collection(firestore, "notifications");
+      await addDoc(notificationRef, {
+        message: `Form ${formId} has been rejected by the first reviewer.`,
+        formData: examFormDoc.data(), // Add form data to the notification
+        timestamp: new Date(),
+      });
+    } catch (error) {
+      console.error("Error adding notification document: ", error);
+    }
+
+    console.log("Form rejected by the first reviewer.");
+  } else {
+    console.log("Form not found for the specified form ID.");
+  }
+};
+
+//methode to reject by the second reviewer and send notification to the applicant
+export const rejectSecondReviewerService = async (formId) => {
+  const examFormRef = doc(collection(firestore, "exam_duty"), formId);
+  const examFormDoc = await getDoc(examFormRef);
+
+  if (examFormDoc.exists()) {
+    await setDoc(
+      examFormDoc.ref,
+      {
+        appvover_by_second_reciver: false,
+        rejected_by_second_reciver: true,
+        current_step: 4,
+      },
+      { merge: true }
+    );
+
+    // Create a new document in the "notifications" collection
+    try {
+      const notificationRef = collection(firestore, "notifications");
+      await addDoc(notificationRef, {
+        message: `Form ${formId} has been rejected by the second reviewer.`,
+        formData: examFormDoc.data(), // Add form data to the notification
+        timestamp: new Date(),
+      });
+    } catch (error) {
+      console.error("Error adding notification document: ", error);
+    }
+
+    console.log("Form rejected by the second reviewer.");
+  } else {
+    console.log("Form not found for the specified form ID.");
+  }
+};
+
+//methoed to edited by the first reviewer and send notification to the applicant
+export const editedByFirstReviewerService = async (formId) => {
+  const examFormRef = doc(collection(firestore, "exam_duty"), formId);
+  const examFormDoc = await getDoc(examFormRef);
+
+  if (examFormDoc.exists()) {
+    await setDoc(
+      examFormDoc.ref,
+      {
+        edited_by_first_reciver: true,
+        current_step: 2,
+      },
+      { merge: true }
+    );
+
+    // Create a new document in the "notifications" collection
+    try {
+      const notificationRef = collection(firestore, "notifications");
+      await addDoc(notificationRef, {
+        message: `Form ${formId} has been edited by the first reviewer.`,
+        formData: examFormDoc.data(), // Add form data to the notification
+        timestamp: new Date(),
+      });
+      console.log("Form edited by the first reviewer.");
+    } catch (error) {
+      console.error("Error adding notification document: ", error);
+    }
+
+    console.log("Form edited by the first reviewer.");
+  } else {
+    console.log("Form not found for the specified form ID.");
+  }
+};
+
+//methoed to edited by the second reviewer and send notification to the applicant
+export const editedBySecondReviewerService = async (formId) => {
+  const examFormRef = doc(collection(firestore, "exam_duty"), formId);
+  const examFormDoc = await getDoc(examFormRef);
+
+  if (examFormDoc.exists()) {
+    await setDoc(
+      examFormDoc.ref,
+      {
+        edited_by_second_reciver: true,
+        current_step: 3,
+      },
+      { merge: true }
+    );
+
+    // Create a new document in the "notifications" collection
+    try {
+      const notificationRef = collection(firestore, "notifications");
+      await addDoc(notificationRef, {
+        message: `Form ${formId} has been edited by the second reviewer.`,
+        formData: examFormDoc.data(), // Add form data to the notification
+        timestamp: new Date(),
+      });
+    } catch (error) {
+      console.error("Error adding notification document: ", error);
+    }
+
+    console.log("Form edited by the second reviewer.");
   } else {
     console.log("Form not found for the specified form ID.");
   }

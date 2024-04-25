@@ -126,6 +126,28 @@ const Progress = () => {
                           {form.appvover_by_second_reciver.toString()}{" "}
                         </span>
                       </h1>
+
+                      <br />
+
+                      <h1>
+                        Rejected By the Firse Reviver {form.first_reciver_email}
+                        <span className=" text-blue-500">
+                          : {form.rejected_by_first_reciver.toString()}
+                        </span>
+                      </h1>
+                      <h1>
+                        Rejected By the Second Reviver{" "}
+                        {form.second_reciver_email}:
+                        <span className=" text-blue-500">
+                          {form.rejected_by_second_reciver.toString()}{" "}
+                        </span>
+                      </h1>
+                      <a
+                        href={`/dashboard/exam/${form.form_id}`}
+                        className=" text-blue-800 mt-5  hover:underline hover:text-blue-500  font-semibold"
+                      >
+                        See the Full Form
+                      </a>
                     </div>
                   );
                 })}

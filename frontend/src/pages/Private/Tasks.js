@@ -11,6 +11,8 @@ import {
   approveFirstReviewerService,
   getSecondReviewerForms,
   approveSecondReviewerService,
+  rejectFirstReviewerService,
+  rejectSecondReviewerService,
 } from "../../services/progress/progress_exam_duty";
 import { LucideAlignHorizontalSpaceBetween } from "lucide-react";
 
@@ -86,6 +88,31 @@ const Tasks = () => {
     }
   };
 
+  //form rejected
+  const rejectFormByFirstReviwer = async (formId) => {
+    try {
+      await rejectFirstReviewerService(formId);
+      // Show a toast message
+      toast.success("Form rejected successfully");
+    } catch (error) {
+      console.log("Error:", error);
+      // Show a toast message
+      toast.error("An error occurred, please try again");
+    }
+  };
+
+  const rejectFormBySecondReviwer = async (formId) => {
+    try {
+      await rejectSecondReviewerService(formId);
+      // Show a toast message
+      toast.success("Form rejected successfully");
+    } catch (error) {
+      console.log("Error:", error);
+      // Show a toast message
+      toast.error("An error occurred, please try again");
+    }
+  };
+
   return (
     <div className="flex flex-row ml-10 mt-10">
       <div>
@@ -120,7 +147,7 @@ const Tasks = () => {
               <div className="w-[1200px]">
                 {toBeFirstReviewedExamForms.map(
                   (formData, index) =>
-                    formData.current_step == 2 && (
+                    formData.current_step === 2 && (
                       <div
                         key={index}
                         className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between gap-3 mt-5 hover:bg-slate-100 cursor-pointer transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-101"
@@ -215,16 +242,19 @@ const Tasks = () => {
                             <div className="flex gap-2">
                               <button
                                 className="bg-red-100 hover:bg-red-600 hover:text-white hover:ease-in-out text-red-800 flex items-center gap-4 font-medium px-4 py-2 rounded-full text-md"
-                                onClick={() => console.log("Reject clicked")}
+                                onClick={() =>
+                                  formData.current_step === 2 &&
+                                  rejectFormByFirstReviwer(formData.form_id)
+                                }
                               >
                                 Reject <FiDelete />
                               </button>
-                              <button
+                              <a
+                                href={`/dashboard/exam/${formData.form_id}`}
                                 className="bg-yellow-100 hover:bg-yellow-600 hover:text-white hover:ease-in-out text-yellow-800 flex items-center gap-4 font-medium px-4 py-2 rounded-full text-md"
-                                onClick={() => console.log("Edit clicked")}
                               >
                                 Edit <FiEdit />
-                              </button>
+                              </a>
                               <button
                                 onClick={() =>
                                   // Check if this is the first reviewer
@@ -244,7 +274,7 @@ const Tasks = () => {
 
                 {toBeSecondReviewedExamForms.map(
                   (formData, index) =>
-                    formData.current_step == 3 && (
+                    formData.current_step === 3 && (
                       <div
                         key={index}
                         className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between gap-3 mt-5 hover:bg-slate-100 cursor-pointer transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-101"
@@ -336,16 +366,19 @@ const Tasks = () => {
                             <div className="flex gap-2">
                               <button
                                 className="bg-red-100 hover:bg-red-600 hover:text-white hover:ease-in-out text-red-800 flex items-center gap-4 font-medium px-4 py-2 rounded-full text-md"
-                                onClick={() => console.log("Reject clicked")}
+                                onClick={() =>
+                                  formData.current_step === 3 &&
+                                  rejectFormBySecondReviwer(formData.form_id)
+                                }
                               >
                                 Reject <FiDelete />
                               </button>
-                              <button
+                              <a
+                                href={`/dashboard/exam/${formData.form_id}`}
                                 className="bg-yellow-100 hover:bg-yellow-600 hover:text-white hover:ease-in-out text-yellow-800 flex items-center gap-4 font-medium px-4 py-2 rounded-full text-md"
-                                onClick={() => console.log("Edit clicked")}
                               >
                                 Edit <FiEdit />
-                              </button>
+                              </a>
                               <button
                                 onClick={() =>
                                   // Check if this is the second reviewer

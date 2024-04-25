@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ExamDuty from "./pages/Private/DashboardPages/ExamDuty";
 import Notifications from "./pages/Private/Notifications";
+import ExamDutyById from "../src/Components/forms/exam_duty/ExamDutyById";
 
 function App() {
   return (
@@ -30,6 +31,10 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/dashboard/exam" element={<ExamDuty />} />
+          <Route
+            path="/dashboard/exam/:examFormId"
+            element={<ExamDutyById />}
+          />
         </Routes>
 
         <ToastContainer />

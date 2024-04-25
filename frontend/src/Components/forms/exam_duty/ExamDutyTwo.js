@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
-import { firestore } from "../../config/firebase_configure";
+import { firestore } from "../../../config/firebase_configure";
 import { TiEdit } from "react-icons/ti";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

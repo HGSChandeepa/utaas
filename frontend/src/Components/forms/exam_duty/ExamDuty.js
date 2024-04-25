@@ -3,9 +3,9 @@ import { collection, addDoc } from "firebase/firestore";
 import { TiEdit } from "react-icons/ti";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { auth } from "../../config/firebase_configure";
+import { auth } from "../../../config/firebase_configure";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { firestore } from "../../config/firebase_configure";
+import { firestore } from "../../../config/firebase_configure";
 import { useNavigate } from "react-router-dom";
 
 const FormComponentExamDuty = () => {
