@@ -16,7 +16,8 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const trinmedEmail = email.trim();
+      await signInWithEmailAndPassword(auth, trinmedEmail, password);
       toast.success("Login successful");
       navigate("/dashboard");
     } catch (error) {

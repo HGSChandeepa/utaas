@@ -50,10 +50,12 @@ const Register = (props) => {
       return;
     }
 
+    const trimmedEmail = email.trim();
+
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        email,
+        trimmedEmail,
         password
       );
 

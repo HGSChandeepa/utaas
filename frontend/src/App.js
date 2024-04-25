@@ -1,8 +1,8 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import LandingPage from "./pages/Public/LandingPage";
-import Login from "./pages/Public/Login";
-import Register from "./pages/Public/Register";
+import LandingPage from "./pages/Auth/LandingPage";
+import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
 import Dashboard from "./pages/Private/Dashboard";
 import MyActivities from "./pages/Private/MyActivities";
 import Tasks from "./pages/Private/Tasks";
