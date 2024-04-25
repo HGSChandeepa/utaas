@@ -1,64 +1,59 @@
 import React, { useEffect, useState } from "react";
 import SideBar from "../../Components/Sidebar/SideBar";
-import { getFirestore, doc, getDoc, getDocs } from "firebase/firestore";
-import { collection, addDoc } from "firebase/firestore";
-import { ToastContainer, toast } from "react-toastify";
+import { auth } from "../../config/firebase_configure";
+import { doc, getDoc } from "firebase/firestore";
+import { firestore } from "../../config/firebase_configure";
 import "react-toastify/dist/ReactToastify.css";
-import { TiEdit } from "react-icons/ti";
-
-import { FiDelete } from "react-icons/fi";
+import { getAllFormsByCurrentUser } from "../../services/progress/progress_exam_duty";
 
 const Progress = () => {
+  const [examDutyForms, setExamDutyForms] = useState([]);
   const [userData, setUserData] = useState(null);
   const [userRole, setUserRole] = useState(null);
-  const [userid, setUserId] = useState(null);
-  const [userFormType, setUserFormType] = useState(null);
-  const [userEmail, setUserEmail] = useState(null);
-  const [userForms, setUserForms] = useState([]);
-  const [examDutyForms, setExamDutyForms] = useState([]);
+  const [examForms, setExamForms] = useState([]);
+  const [toBeFirstReviewedForms, setToBeFirstReviewedForms] = useState(null);
+  const [toBeSecondReviewedForms, setToBeSecondReviewedForms] = useState(null);
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       try {
-        const userId = localStorage.getItem("userId");
-        setUserId(userId);
-        console.log(userId);
-        const db = getFirestore();
-        const userDataRef = doc(db, "users", userId);
+        if (user) {
+          const docRef = doc(firestore, "users", user.uid);
+          const docSnap = await getDoc(docRef);
 
-        const userDataSnapshot = await getDoc(userDataRef);
-        if (userDataSnapshot.exists()) {
-          const userData = userDataSnapshot.data();
-          setUserData(userData);
-          setUserRole(userData.role);
-          setUserFormType(userData.role + "forms");
-          setUserEmail(userData.email);
-
-          // Fetch user forms from "ExamDutyForms" collection
-          const examDutyFormsCollectionRef = collection(db, "ExamDutyForms");
-          const examDutyFormsSnapshot = await getDocs(
-            examDutyFormsCollectionRef
-          );
-          const examDutyFormsData = examDutyFormsSnapshot.docs.map((doc) =>
-            doc.data()
-          );
-          setExamDutyForms(examDutyFormsData);
-
-          console.log(examDutyFormsData);
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            setUserData(userData);
+            setUserRole(userData.role);
+          } else {
+            console.log("No such document!");
+          }
         } else {
-          console.log("No such document!");
+          setUserData(null);
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Error:", error);
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (userData) {
+          const data = await getAllFormsByCurrentUser(userData.userEmail);
+          setExamDutyForms(data);
+          console.log(data);
+        }
+      } catch (error) {
+        console.error("Error:", error);
       }
     };
 
-    fetchUserData();
-  }, []);
-
-  ///fethch all forms from tthis user from the userFormType collection
-
-  console.log(userForms[0]);
+    fetchData();
+  }, [userData]);
 
   return (
     <div className="flex flex-row ml-10 mt-10">
@@ -92,49 +87,35 @@ const Progress = () => {
             {/* cards */}
             <div className="flex flex-col gap-5">
               <div className=" w-[1200px]">
-                {examDutyForms.map((form, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-row justify-between items-center bg-slate-100 p-4 rounded-md shadow-md mb-7"
-                  >
-                    <div>
-                      <div className="flex gap-2 ml-[900px]">
-                        <button className="bg-red-100 text-red-800 flex items-center gap-4   font-medium px-4 py-2 rounded-full text-md">
-                          Delete <FiDelete />
-                        </button>
-                      </div>
-                      <h3 className="text-xl font-semibold text-yellow-500 mb-4">
-                        {form.form_type}
-                      </h3>
-                      <p className="text-gray-500">
-                        Applied Time : {form.time}
-                      </p>
-                      <p className="text-gray-500">
-                        Applied Dates : {form.date}
-                      </p>
-                      <p className="text-gray-500">
-                        Department : {form.department}
-                      </p>
-
-                      <hr />
-
-                      <p className="text-blue-500 mt-5 text-lg font-semibold">
-                        Form Applied By : {form.role}
-                      </p>
-
-                      <hr />
-                      <div className=" mt-10 bg-slate-200 w-[1000px] p-5 rounded-lg border-2 border-yellow-400">
-                        <h1 className="text-yellow-500 bg-yellow-100 px-5 py-2 rounded-full mt-5 text-lg font-semibold">
-                          Progress Traccking <span>{form.form_type}</span> Form
-                        </h1>
-
-                        <div className=" mt-5">
-                          <h1>show the status here...</h1>
-                        </div>
-                      </div>
+                {examDutyForms.map((form, index) => {
+                  return (
+                    <div key={index} className=" p-5 bg-slate-100">
+                      <h1>{form.applicant_name}</h1>
+                      <h1>{form.applicant_email}</h1>
+                      <h1>{form.department}</h1>
+                      <h1>{form.form_type}</h1>
+                      <h1>
+                        Form Submited Sucessfully:{" "}
+                        <span className=" text-blue-500">
+                          {form.edited_by_first_reciver.toString()}
+                        </span>
+                      </h1>
+                      <h1>
+                        Approved By the Firse Reviver {form.first_reciver_email}
+                        <span className=" text-blue-500">
+                          : {form.edited_by_second_reciver.toString()}
+                        </span>
+                      </h1>
+                      <h1>
+                        Approved By the Second Reviver{" "}
+                        {form.second_reciver_email}:
+                        <span className=" text-blue-500">
+                          {form.edited_by_third_reciver.toString()}{" "}
+                        </span>
+                      </h1>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>

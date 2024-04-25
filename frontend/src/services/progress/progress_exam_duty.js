@@ -18,9 +18,28 @@ export const getFirstReviewerForms = async (email) => {
   const examFormsCollection = collection(firestore, "exam_duty");
   const examFormsSnapshot = await getDocs(examFormsCollection);
   examFormsSnapshot.forEach((doc) => {
-    if (doc.data().first_reviewer === email) {
+    if (doc.data().first_reciver_email.trim() === email.trim()) {
       examForms.push(doc.data());
     }
   });
+
+  return examForms;
+};
+
+//get all the forms submited by the current user
+//get all the forms submited by the current user
+export const getAllFormsByCurrentUser = async (email) => {
+  const examForms = [];
+  console.log(email);
+  const examFormsCollection = collection(firestore, "exam_duty");
+  const examFormsSnapshot = await getDocs(examFormsCollection);
+  examFormsSnapshot.forEach((doc) => {
+    const formData = doc.data();
+
+    if (formData && formData.applicant_email.trim() === email.trim()) {
+      examForms.push(formData);
+    }
+  });
+
   return examForms;
 };

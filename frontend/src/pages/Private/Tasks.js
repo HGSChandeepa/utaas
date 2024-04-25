@@ -19,28 +19,28 @@ const Tasks = () => {
   const [toBeSecondReviewedForms, setToBeSecondReviewedForms] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        console.log(user.uid);
-        const docRef = doc(firestore, "users", user.uid);
-        const docSnap = getDoc(docRef);
-        //set the user data to the state
-        docSnap
-          .then((doc) => {
-            if (doc.exists()) {
-              const userData = doc.data();
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      try {
+        if (user) {
+          const docRef = doc(firestore, "users", user.uid);
+          const docSnap = await getDoc(docRef);
 
-              setUserData(userData);
-              setUserRole(userData.role);
-            } else {
-              console.log("No such document!");
-            }
-          })
-          .catch((error) => {
-            console.error("Error getting document:", error);
-          });
-      } else {
-        setUserData(null);
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            setUserData(userData);
+            setUserRole(userData.role);
+
+            // Check if the user is the first reviewer
+            const data = await getFirstReviewerForms(userData.userEmail);
+            setToBeFirstReviewedForms(data);
+          } else {
+            console.log("No such document!");
+          }
+        } else {
+          setUserData(null);
+        }
+      } catch (error) {
+        console.error("Error:", error);
       }
     });
 
@@ -48,12 +48,13 @@ const Tasks = () => {
   }, []);
 
   //get all forms data
-  useEffect(() => {
-    getFirstReviewerForms().then((data) => {
-      setToBeFirstReviewedForms(data);
-      console.log(data);
-    });
-  }, []);
+  // useEffect(() => {
+  //   console.log(userData && userData.userEmail);
+  //   getFirstReviewerForms(userData && userData.userEmail).then((data) => {
+  //     setToBeFirstReviewedForms(data);
+  //     console.log(data);
+  //   });
+  // }, []);
 
   return (
     <div className="flex flex-row ml-10 mt-10">
