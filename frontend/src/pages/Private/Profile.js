@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { auth } from "../../config/firebase_configure";
+import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
+import { auth, db, storage } from "../../config/firebase_configure";
 import SideBar from "../../Components/Sidebar/SideBar";
 import { useNavigate } from "react-router-dom";
 import { firestore } from "../../config/firebase_configure";
 import { toast } from "react-toastify";
+import { getAuth } from "firebase/auth";
 import "react-toastify/dist/ReactToastify.css";
+import { CgProfile } from "react-icons/cg";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
+  const [user, setUser] = useState(null);
+  const [profilePic, setProfilePic] = useState("");
   const navigate = useNavigate();
+  const auth = getAuth();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -22,7 +28,7 @@ const ProfilePage = () => {
           .then((doc) => {
             if (doc.exists()) {
               const userData = doc.data();
-
+              setUser(userData);
               setUserData(userData);
               console.log(userData);
             } else {
@@ -40,6 +46,45 @@ const ProfilePage = () => {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    const uploadFile = () => {
+      const storageRef = ref(
+        storage,
+        `profile_pictures/${user.uid}/${profilePic.name}`
+      );
+
+      const uploadTask = uploadBytesResumable(storageRef, profilePic);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+            default:
+              break;
+          }
+        },
+        (error) => {
+          console.error("error", error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setProfilePic(downloadURL);
+          });
+        }
+      );
+    };
+    profilePic && uploadFile();
+  }, [profilePic]);
+
   const handleLogout = () => {
     auth
       .signOut()
@@ -54,6 +99,35 @@ const ProfilePage = () => {
       });
   };
 
+  const onChangeHandler = (e) => {
+    const { name, value } = e.target;
+    setUserData({ ...userData, [name]: value });
+    console.log(userData);
+  };
+
+  const userDetailsUpdate = async (uid) => {
+    const docRef = doc(firestore, "users", uid);
+    try {
+      await updateDoc(docRef, userData);
+      window.location.reload();
+      toast.success("User details updated successfully");
+    } catch (error) {
+      console.error("Error updating document: ", error);
+      toast.error("Error updating user details");
+    }
+  };
+
+  const handleProfilePic = (e) => {
+    document.getElementById("profileImageInput").click();
+    try {
+      const profileImage = e.target.files[0];
+      setProfilePic(profileImage);
+      console.log("profile pic uploaded successfully!");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <div className="flex flex-row ml-10 mt-10">
       <div className="">
@@ -63,47 +137,179 @@ const ProfilePage = () => {
         <div className=" text-black w-64 h-full p-4"></div>
       </div>
 
-      <div className=" flex gap-10">
-        <div className="container mx-auto py-8">
-          <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            {userData ? (
-              <>
-                <h1 className="text-2xl mb-4">Welcome, {userData.userName}</h1>
-                <div className="mb-4">
-                  <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Email:
+      {/* new profile feature */}
+      <div className="p-2 flex flex-col">
+        {user ? (
+          <div>
+            <h1 className="text-[#4743E0] text-lg lg:text-6xl font-extrabold mb-3 lg:mb-8 mt-5 lg:mt-10">
+              Welcome, {user.userName}
+            </h1>
+            {/* Profile Picture */}
+
+            {/* {profilePic ? (
+              <img
+                src={profilePic}
+                alt="profile"
+                className="w-32 h-32 rounded-full cursor-pointer"
+                onClick={handleProfilePic}
+              />
+            ) : (
+              <div
+                className="w-32 h-32 rounded-full bg-gray-200/50 flex items-center justify-center cursor-pointer
+                hover:bg-slate-200 `{ddfjv}`"
+                onClick={handleProfilePic}
+              >
+                <CgProfile className="text-[#828282] w-32 h-32  text-6xl lg:text-8xl" />
+              </div>
+            )}
+            <input
+              type="file"
+              id="profileImageInput"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleProfilePic}
+            /> */}
+          </div>
+        ) : (
+          <p></p>
+        )}
+
+        <div>
+          {userData ? (
+            <>
+              <div>
+                {/* <h1 className="text-[#4743E0] text-lg lg:text-6xl font-extrabold mb-3 lg:mb-8 mt-5 lg:mt-10">
+                  Welcome, {userData.userName}
+                </h1> */}
+                {/* set profile picture */}
+                
+              </div>
+              <hr className="mx-auto border-dashed rounded-md w-[1000%] lg:w-[1000px] mt-12 mb-5" />
+              <div>
+                <div>
+                  <label htmlFor="userName" className="lg:ml-2 mb-2">
+                    User Name
                   </label>
-                  <p className="text-gray-700">{userData.userEmail}</p>
+                  <input
+                    id="userName"
+                    type="text"
+                    placeholder="John"
+                    name="userName"
+                    className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
+                    onChange={onChangeHandler}
+                    value={userData.userName}
+                  />
+
+                  <label htmlFor="userEmail" className="lg:ml-2 mb-2">
+                    User Email
+                  </label>
+                  <input
+                    id="userEmail"
+                    type="text"
+                    placeholder="johnsmith@gmail.com"
+                    name="userEmail"
+                    className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
+                    value={userData.userEmail}
+                    disabled
+                  />
                 </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Contact Number:
+                <div>
+                  <label htmlFor="department" className="lg:ml-2 mb-2">
+                    Department
                   </label>
-                  <p className="text-gray-700">{userData.contactNumber}</p>
+                  <select
+                    className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
+                    defaultValue={userData.department}
+                    onChange={onChangeHandler}
+                    id="department"
+                    type="select"
+                    name="department"
+                  >
+                    <option value="Civil">CEE</option>
+                    <option value="Electrical">EIE</option>
+                    <option value="Mechanical">MME</option>
+                    <option value="IS">IS</option>
+                  </select>
+
+                  <label htmlFor="role" className="lg:ml-2 mb-2">
+                    Role
+                  </label>
+                  <select
+                    className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
+                    defaultValue={userData.role}
+                    // onChange={onChangeHandler}
+                    id="role"
+                    type="select"
+                    name="role"
+                    disabled
+                  >
+                    <option value="HOD">HOD</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Lecturer">Lecturer</option>
+                    <option value="Instructor">Instructor</option>
+                  </select>
                 </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Department:
+                <div>
+                  <label htmlFor="contactNumber" className="lg:ml-2 mb-2">
+                    Contact Number
                   </label>
-                  <p className="text-gray-700">{userData.department}</p>
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Role:
-                  </label>
-                  <p className="text-gray-700">{userData.role}</p>
+                  <input
+                    id="contactNumber"
+                    type="text"
+                    placeholder="+94 000 000 000"
+                    name="contactNumber"
+                    className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
+                    onChange={onChangeHandler}
+                    value={userData.contactNumber}
+                  />
                 </div>
                 <button
-                  onClick={handleLogout}
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={() => {
+                    userDetailsUpdate(userData.uid);
+                  }}
+                  className="bg-[#4743E0] text-white px-8 py-2 rounded-full"
                 >
-                  Log Out
+                  Save Changes
                 </button>
-              </>
-            ) : (
-              <p>Loading user data...</p>
-            )}
-          </div>
+              </div>
+              <hr className="mx-auto border-dashed rounded-md w-[1000%] lg:w-[1000px] mt-12 mb-5" />
+              <div>
+                <h1 className="font-semibold text-lg">Change Password</h1>
+                <div>
+                  <label htmlFor="password" className="lg:ml-2 mb-2">
+                    New Password
+                  </label>
+                  <input
+                    id="password"
+                    type="password"
+                    placeholder="********"
+                    name="password"
+                    className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="confirmPassword" className="lg:ml-2 mb-2">
+                    Confirm Password
+                  </label>
+                  <input
+                    id="confirmPassword"
+                    type="password"
+                    placeholder="******"
+                    name="confirmPassword"
+                    className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
+                  />
+                </div>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Log Out
+              </button>
+            </>
+          ) : (
+            <p>Loading user data...</p>
+          )}
         </div>
       </div>
     </div>
