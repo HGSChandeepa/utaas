@@ -8,7 +8,9 @@ import { toast } from "react-toastify";
 import { getAuth } from "firebase/auth";
 import "react-toastify/dist/ReactToastify.css";
 import { CgProfile } from "react-icons/cg";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL,deleteObject } from "firebase/storage";
+import ImageFiller from "react-image-filler";
+// import firebase from 'firebase/app';
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
@@ -46,8 +48,27 @@ const ProfilePage = () => {
     return unsubscribe;
   }, []);
 
-  useEffect(() => {
-    const uploadFile = () => {
+  //#################profile picture
+
+
+
+useEffect(() => {
+  const uploadFile = () => {
+    if (profilePic) {
+      // Check if there is an existing profile picture
+      if (user.profilePicURL) {
+        // Delete the existing profile picture
+        const existingPicRef = ref(storage, user.profilePicURL);
+        deleteObject(existingPicRef)
+          .then(() => {
+            console.log('Existing profile picture deleted successfully');
+          })
+          .catch((error) => {
+            console.error('Error deleting existing profile picture:', error);
+          });
+      }
+
+      // Upload the new profile picture
       const storageRef = ref(
         storage,
         `profile_pictures/${user.uid}/${profilePic.name}`
@@ -56,24 +77,24 @@ const ProfilePage = () => {
       const uploadTask = uploadBytesResumable(storageRef, profilePic);
 
       uploadTask.on(
-        "state_changed",
+        'state_changed',
         (snapshot) => {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
+          console.log('Upload is ' + progress + '% done');
           switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
+            case 'paused':
+              console.log('Upload is paused');
               break;
-            case "running":
-              console.log("Upload is running");
+            case 'running':
+              console.log('Upload is running');
               break;
             default:
               break;
           }
         },
         (error) => {
-          console.error("error", error);
+          console.error('Error uploading profile picture:', error);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -81,10 +102,34 @@ const ProfilePage = () => {
           });
         }
       );
-    };
-    profilePic && uploadFile();
-  }, [profilePic]);
+    }
+  };
 
+  uploadFile();
+}, [profilePic]);
+
+//input field changes save and store
+const onChangeHandler = (e) => {
+  const { name, value } = e.target;
+  setUserData({ ...userData, [name]: value });
+  console.log(userData);
+};
+//update new details to the database
+const userDetailsUpdate = async (uid) => {
+  const docRef = doc(firestore, "users", uid);
+  try {
+    await updateDoc(docRef, userData);
+    window.location.reload();
+    toast.success("User details updated successfully");
+  } catch (error) {
+    console.error("Error updating document: ", error);
+    toast.error("Error updating user details");
+  }
+};
+
+
+
+//#################log out
   const handleLogout = () => {
     auth
       .signOut()
@@ -99,34 +144,7 @@ const ProfilePage = () => {
       });
   };
 
-  const onChangeHandler = (e) => {
-    const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value });
-    console.log(userData);
-  };
-
-  const userDetailsUpdate = async (uid) => {
-    const docRef = doc(firestore, "users", uid);
-    try {
-      await updateDoc(docRef, userData);
-      window.location.reload();
-      toast.success("User details updated successfully");
-    } catch (error) {
-      console.error("Error updating document: ", error);
-      toast.error("Error updating user details");
-    }
-  };
-
-  const handleProfilePic = (e) => {
-    document.getElementById("profileImageInput").click();
-    try {
-      const profileImage = e.target.files[0];
-      setProfilePic(profileImage);
-      console.log("profile pic uploaded successfully!");
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+  
 
   return (
     <div className="flex flex-row ml-10 mt-10">
@@ -145,30 +163,17 @@ const ProfilePage = () => {
               Welcome, {user.userName}
             </h1>
             {/* Profile Picture */}
-
-            {/* {profilePic ? (
-              <img
-                src={profilePic}
-                alt="profile"
-                className="w-32 h-32 rounded-full cursor-pointer"
-                onClick={handleProfilePic}
+            <div
+              style={{
+                borderRadius: "50%",
+                overflow: "hidden",
+                width: 200,
+                height: 200,
+              }}
+            >
+              <ImageFiller width={200} height={200} 
               />
-            ) : (
-              <div
-                className="w-32 h-32 rounded-full bg-gray-200/50 flex items-center justify-center cursor-pointer
-                hover:bg-slate-200 `{ddfjv}`"
-                onClick={handleProfilePic}
-              >
-                <CgProfile className="text-[#828282] w-32 h-32  text-6xl lg:text-8xl" />
-              </div>
-            )}
-            <input
-              type="file"
-              id="profileImageInput"
-              accept="image/*"
-              style={{ display: "none" }}
-              onChange={handleProfilePic}
-            /> */}
+            </div>
           </div>
         ) : (
           <p></p>
@@ -182,7 +187,6 @@ const ProfilePage = () => {
                   Welcome, {userData.userName}
                 </h1> */}
                 {/* set profile picture */}
-                
               </div>
               <hr className="mx-auto border-dashed rounded-md w-[1000%] lg:w-[1000px] mt-12 mb-5" />
               <div>
