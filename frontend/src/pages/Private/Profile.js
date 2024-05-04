@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
-import { auth, db, storage } from "../../config/firebase_configure";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { storage } from "../../config/firebase_configure";
 import SideBar from "../../Components/Sidebar/SideBar";
 import { useNavigate } from "react-router-dom";
 import { firestore } from "../../config/firebase_configure";
 import { toast } from "react-toastify";
-import { getAuth } from "firebase/auth";
+import { getAuth, updateProfile } from "firebase/auth";
 import "react-toastify/dist/ReactToastify.css";
-import { CgProfile } from "react-icons/cg";
-import { ref, uploadBytesResumable, getDownloadURL,deleteObject } from "firebase/storage";
-import ImageFiller from "react-image-filler";
-// import firebase from 'firebase/app';
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import default_profile from "../../assets/user.jpg";
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
   const [user, setUser] = useState(null);
-  const [profilePic, setProfilePic] = useState("");
+  const [profilePic, setProfilePic] = useState(default_profile);
+  const [url, setUrl] = useState(null);
   const navigate = useNavigate();
   const auth = getAuth();
 
@@ -32,7 +31,7 @@ const ProfilePage = () => {
               const userData = doc.data();
               setUser(userData);
               setUserData(userData);
-              console.log(userData);
+              // console.log("this is current user",currentUser);
             } else {
               console.log("No such document!");
             }
@@ -44,92 +43,75 @@ const ProfilePage = () => {
         setUserData(null);
       }
     });
-
     return unsubscribe;
   }, []);
 
-  //#################profile picture
-
-
-
-useEffect(() => {
-  const uploadFile = () => {
-    if (profilePic) {
-      // Check if there is an existing profile picture
-      if (user.profilePicURL) {
-        // Delete the existing profile picture
-        const existingPicRef = ref(storage, user.profilePicURL);
-        deleteObject(existingPicRef)
-          .then(() => {
-            console.log('Existing profile picture deleted successfully');
+  useEffect(() => {
+    const fetchurl = () => {
+      if (user && user.uid) {
+        const imageRef = ref(storage, `profile_pictures/${user.uid}`);
+        getDownloadURL(imageRef)
+          .then((url) => {
+            setUrl(url);
+            console.log("this is the url", url);
           })
           .catch((error) => {
-            console.error('Error deleting existing profile picture:', error);
+            console.log(error.message, "Error in setUrl");
           });
+        setProfilePic(null);
       }
+    };
+    fetchurl();
+  }, [user]);
 
-      // Upload the new profile picture
-      const storageRef = ref(
-        storage,
-        `profile_pictures/${user.uid}/${profilePic.name}`
-      );
-
-      const uploadTask = uploadBytesResumable(storageRef, profilePic);
-
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-          switch (snapshot.state) {
-            case 'paused':
-              console.log('Upload is paused');
-              break;
-            case 'running':
-              console.log('Upload is running');
-              break;
-            default:
-              break;
-          }
-        },
-        (error) => {
-          console.error('Error uploading profile picture:', error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setProfilePic(downloadURL);
-          });
-        }
-      );
+  const handleInputPic = (e) => {
+    if (e.target.files[0]) {
+      setProfilePic(e.target.files[0]);
     }
   };
 
-  uploadFile();
-}, [profilePic]);
+  //prpofile pic upload
+  const uploadpic = () => {
+    const imageRef = ref(storage, `profile_pictures/${user.uid}`);
+    uploadBytes(imageRef, profilePic)
+      .then(() => {
+        getDownloadURL(imageRef)
+          .then((url) => {
+            setUrl(url);
+            console.log("this is the url", url);
+          })
+          .catch((error) => {
+            console.log(error.message, "Error in setUrl");
+          });
+        setProfilePic(null);
+      })
+      .catch((error) => {
+        console.log("Error in uploading", error.message);
+      });
+    updateProfile(user, { url });
+    toast.success("Profile Picture Uploaded Successfully");
+  };
 
-//input field changes save and store
-const onChangeHandler = (e) => {
-  const { name, value } = e.target;
-  setUserData({ ...userData, [name]: value });
-  console.log(userData);
-};
-//update new details to the database
-const userDetailsUpdate = async (uid) => {
-  const docRef = doc(firestore, "users", uid);
-  try {
-    await updateDoc(docRef, userData);
-    window.location.reload();
-    toast.success("User details updated successfully");
-  } catch (error) {
-    console.error("Error updating document: ", error);
-    toast.error("Error updating user details");
-  }
-};
+  //input field changes save and store
+  const onChangeHandler = (e) => {
+    const { name, value } = e.target;
+    setUserData({ ...userData, [name]: value });
+    console.log(userData);
+  };
+  //update new details to the database
+  const userDetailsUpdate = async (uid) => {
+    const docRef = doc(firestore, "users", uid);
+    try {
+      await updateDoc(docRef, userData);
+      window.location.reload();
+      toast.success("User details updated successfully");
+    } catch (error) {
+      console.error("Error updating document: ", error);
+      toast.error("Error updating user details");
+    }
+  };
 
-
-
-//#################log out
+  //#################log out
   const handleLogout = () => {
     auth
       .signOut()
@@ -144,12 +126,10 @@ const userDetailsUpdate = async (uid) => {
       });
   };
 
-  
-
   return (
-    <div className="flex flex-row ml-10 mt-10">
+    <div className="flex flex-row m-4 w-full">
       <div className="">
-        <div className="place-items-start align-top items-center">
+        <div className="place-items-start w-64 align-top items-center">
           <SideBar />
         </div>
         <div className=" text-black w-64 h-full p-4"></div>
@@ -158,21 +138,45 @@ const userDetailsUpdate = async (uid) => {
       {/* new profile feature */}
       <div className="p-2 flex flex-col">
         {user ? (
-          <div>
-            <h1 className="text-[#4743E0] text-lg lg:text-6xl font-extrabold mb-3 lg:mb-8 mt-5 lg:mt-10">
-              Welcome, {user.userName}
-            </h1>
-            {/* Profile Picture */}
-            <div
-              style={{
-                borderRadius: "50%",
-                overflow: "hidden",
-                width: 200,
-                height: 200,
-              }}
-            >
-              <ImageFiller width={200} height={200} 
-              />
+          <div className="flex flex-row justify-between">
+            <div>
+              <h1 className="text-[#4743E0] text-6xl font-extrabold mb-3 lg:m-4">
+                Welcome, {user.userName}
+              </h1>
+            </div>
+            <div className="flex flex-col lg:flex-col items-center justify-center gap-4">
+              {/* Profile Picture */}
+              <div className="relative w-20 h-20 lg:w-40 lg:h-40 mb-6 lg:mb-0 mr-0 lg:mr-12">
+                <img
+                  src={url}
+                  alt="profile pic"
+                  className="w-full h-full object-cover rounded-full shadow-lg"
+                />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-gray-900 bg-opacity-75 rounded-full">
+                  <input
+                    type="file"
+                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                    onChange={handleInputPic}
+                  />
+                  <span className="text-white text-sm lg:text-base font-semibold">
+                    Change Picture
+                  </span>
+                </div>
+              </div>
+              <div>
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={handleInputPic}
+                  id="profilePicInput"
+                />
+                <label
+                  htmlFor="profilePicInput"
+                  className="cursor-pointer bg-[#4743E0] text-white text-sm lg:text-base font-semibold  px-4 py-2 rounded-md shadow-md transition duration-300 ease-in-out hover:bg-opacity-80"
+                >
+                  Upload
+                </label>
+              </div>
             </div>
           </div>
         ) : (
@@ -182,12 +186,7 @@ const userDetailsUpdate = async (uid) => {
         <div>
           {userData ? (
             <>
-              <div>
-                {/* <h1 className="text-[#4743E0] text-lg lg:text-6xl font-extrabold mb-3 lg:mb-8 mt-5 lg:mt-10">
-                  Welcome, {userData.userName}
-                </h1> */}
-                {/* set profile picture */}
-              </div>
+              <div></div>
               <hr className="mx-auto border-dashed rounded-md w-[1000%] lg:w-[1000px] mt-12 mb-5" />
               <div>
                 <div>
@@ -312,7 +311,11 @@ const userDetailsUpdate = async (uid) => {
               </button>
             </>
           ) : (
-            <p>Loading user data...</p>
+            <div className="flex flex-col items-center ml-96 mb-10 justify-center w-96 h-screen p-4">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-4  border-b-4   border-[#4743E0]"></div>
+              Loading
+            
+            </div>
           )}
         </div>
       </div>
