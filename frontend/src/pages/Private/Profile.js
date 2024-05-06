@@ -7,6 +7,8 @@ import { firestore } from "../../config/firebase_configure";
 import { toast } from "react-toastify";
 import { getAuth, updateProfile } from "firebase/auth";
 import "react-toastify/dist/ReactToastify.css";
+import { PiUploadSimpleLight } from "react-icons/pi";
+import { PiCheckSquareOffsetLight } from "react-icons/pi";
 import {
   ref,
   getDownloadURL,
@@ -36,7 +38,6 @@ const ProfilePage = () => {
               const userData = doc.data();
               setUser(userData);
               setUserData(userData);
-              // console.log("this is current user",currentUser);
             } else {
               console.log("No such document!");
             }
@@ -51,6 +52,7 @@ const ProfilePage = () => {
     return unsubscribe;
   }, []);
 
+  //get the profile picture url
   useEffect(() => {
     const fetchurl = () => {
       if (user && user.uid) {
@@ -69,9 +71,11 @@ const ProfilePage = () => {
     fetchurl();
   }, [user]);
 
+  //handle input profile picture and set it to the state
   const handleInputPic = (e) => {
     if (e.target.files[0]) {
       setProfilePic(e.target.files[0]);
+      toast.success("Please Click Upload button to update profile picture");
     }
   };
 
@@ -79,14 +83,15 @@ const ProfilePage = () => {
   const uploadpic = () => {
     const imageRef = ref(storage, `profile_pictures/${user.uid}`);
     const desertRef = ref(storage, `profile_pictures/${user.uid}`);
+    //file selection
     if (profilePic === null) {
       toast.error("Please select a profile picture");
       return;
     } else {
+      //if already exist profile picture delete it
       if (`profile_pictures/${user.uid}`) {
         deleteObject(desertRef)
           .then(() => {
-            // toast.success("Profile Picture Deleted Successfully");
             console.log("File deleted successfully");
           })
           .catch((error) => {
@@ -94,7 +99,7 @@ const ProfilePage = () => {
             toast.error("Error in deleting exist profile picture");
           });
       }
-
+      //upload new profile picture
       uploadBytes(imageRef, profilePic)
         .then(() => {
           getDownloadURL(imageRef)
@@ -159,81 +164,55 @@ const ProfilePage = () => {
         <div className=" text-black w-64 h-full p-4"></div>
       </div>
 
-      {/* new profile feature */}
-      <div className="p-2 flex flex-col">
+      {/* profile picture section */}
+      <div className="p-2 flex flex-col w-full mx-5">
         {user ? (
-          <div>
-            <h1 className="text-[#4743E0] text-lg lg:text-6xl font-extrabold mb-3 lg:mb-8 mt-5 lg:mt-10">
-              Welcome, {user.userName}
+          <div className="flex flex-row  items-center justify-between gap-5">
+            <h1 className="text-[#4743E0] text-6xl font-extrabold mb-3 lg:mb-8 mt-5 lg:mt-10">
+              {user.userName}
             </h1>
-            {/* Profile Picture */}
-            <div className="flex flex-col lg:flex-row items-center justify-center">
-              <div
-                className="flex flex-col justify-between"
-                style={{
-                  borderRadius: "50%",
-                  overflow: "hidden",
-                  width: 200,
-                  height: 200,
-                }}
-              >
-                {url ? (
-                  <div className="relative w-44 h-44 lg:w-60 lg:h-60 mb-6 lg:mb-0 mr-0 lg:mr-12">
-                    <img
-                      src={url}
-                      alt={"profile pic"}
-                      className="w-full h-full object-cover rounded-full shadow-lg"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-gray-900 bg-opacity-75 rounded-full">
-                      <input
-                        type="file"
-                        onChange={handleInputPic}
-                        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                      />
-                      <span className="text-white text-sm lg:text-base font-semibold">
-                        Change Picture
-                      </span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="relative w-44 h-44">
-                    <img
-                      src={default_profile}
-                      alt={"profile pic"}
-                      className="w-full h-full object-cover rounded-full shadow-lg"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-gray-900 bg-opacity-75 rounded-full">
-                      <input
-                        type="file"
-                        onChange={handleInputPic}
-                        className="absolute opacity-0 cursor-pointer w-full h-full"
-                      />
-                      <span className="text-white text-sm lg:text-base font-semibold">
-                        Change Picture
-                      </span>
-                    </div>
-                  </div>
-                )}
+            <div className="flex flex-col lg:flex-col items-center justify-center ">
+              {/* Profile Picture */}
+              <div className="flex-shrink-0  relative w-32 h-32 m-2 justify-center items-center lg:w-44 lg:h-44 mb-6 lg:mb-0 mr-0 lg:mr-12">
+                <img
+                  src={url || default_profile}
+                  alt="profile pic"
+                  className="justify-center items-center w-full h-full object-cover rounded-full shadow-lg"
+                />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-gray-900 bg-opacity-75 rounded-full">
+                  <input
+                    type="file"
+                    onChange={handleInputPic}
+                    className="absolute justify-center inset-0 opacity-0 cursor-pointer w-full h-full"
+                  />
+                  <span className="text-white text-sm justify-center lg:justify-center font-normal">
+                    <PiCheckSquareOffsetLight className="justify-center w-6 h-6 ml-10" />
+                    Change Picture
+                  </span>
+                </div>
               </div>
-              <div>
+              <div className="flex flex-row justify-center items-center lg:mr-10 mt-2 ">
                 <button
-                  className="cursor-pointer bg-[#4743E0] text-white px-8 py-2 rounded-full ease-in-out hover:bg-opacity-80"
+                  className="cursor-pointer flex flex-row justify-center border-2  text-gray-800 px-4 py-1 rounded-full ease-in-out hover:underline hover:bg-slate-100"
                   onClick={uploadpic}
                 >
+                  <PiUploadSimpleLight className="m-1" />
                   Upload
                 </button>
               </div>
             </div>
           </div>
         ) : (
-           <div>user not found</div>
-        )}  
+          <div className=" text-lg lg:text-2xl font-thin mt-5">
+            User not found
+          </div>
+        )}
 
+        {/* profile details section */}
         <div>
           {userData ? (
             <>
-              <div></div>
-              <hr className="mx-auto border-dashed rounded-md w-[1000%] lg:w-[1000px] mt-12 mb-5" />
+              <hr className="mx-auto border-dashed rounded-md lg:w-full mt-12 mb-5" />
               <div>
                 <div>
                   <label htmlFor="userName" className="lg:ml-2 mb-2">
@@ -286,7 +265,7 @@ const ProfilePage = () => {
                   <select
                     className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
                     defaultValue={userData.role}
-                    // onChange={onChangeHandler}
+                    onChange={onChangeHandler}
                     id="role"
                     type="select"
                     name="role"
@@ -321,9 +300,10 @@ const ProfilePage = () => {
                   Save Changes
                 </button>
               </div>
-              <hr className="mx-auto border-dashed rounded-md w-[1000%] lg:w-[1000px] mt-12 mb-5" />
+              <hr className="mx-auto border-dashed rounded-md lg:w-full mt-12 mb-5" />
+              {/* Password section */}
               <div>
-                <h1 className="font-semibold text-lg">Change Password</h1>
+                <h1 className="font-semibold text-lg m-2">Change Password</h1>
                 <div>
                   <label htmlFor="password" className="lg:ml-2 mb-2">
                     New Password
@@ -334,6 +314,7 @@ const ProfilePage = () => {
                     placeholder="********"
                     name="password"
                     className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
+                    // onChange={passwordHandler}
                   />
                 </div>
                 <div>
@@ -346,6 +327,7 @@ const ProfilePage = () => {
                     placeholder="******"
                     name="confirmPassword"
                     className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
+                    // onChange={confirmPasswordHandler}
                   />
                 </div>
               </div>
