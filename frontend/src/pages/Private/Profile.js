@@ -5,17 +5,23 @@ import SideBar from "../../Components/Sidebar/SideBar";
 import { useNavigate } from "react-router-dom";
 import { firestore } from "../../config/firebase_configure";
 import { toast } from "react-toastify";
-import { getAuth, updateProfile } from "firebase/auth";
 import "react-toastify/dist/ReactToastify.css";
 import { PiUploadSimpleLight } from "react-icons/pi";
 import { PiCheckSquareOffsetLight } from "react-icons/pi";
+import default_profile from "../../assets/user.jpg";
+import {
+  getAuth,
+  updateProfile,
+  reauthenticateWithCredential,
+  updatePassword,
+  EmailAuthProvider,
+} from "firebase/auth";
 import {
   ref,
   getDownloadURL,
   uploadBytes,
   deleteObject,
 } from "firebase/storage";
-import default_profile from "../../assets/user.jpg";
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
@@ -52,6 +58,7 @@ const ProfilePage = () => {
     return unsubscribe;
   }, []);
 
+  //------------------------------{PROFILE PICTURE SECTION}---------------------
   //get the profile picture url
   useEffect(() => {
     const fetchurl = () => {
@@ -121,6 +128,7 @@ const ProfilePage = () => {
     }
   };
 
+  //-----------------------{USER DEATAILS UPDATE SECTION}------------------
   //input field changes save and store
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -140,7 +148,54 @@ const ProfilePage = () => {
     }
   };
 
-  //#################log out
+  //----------------------{PASSWORD UPDATE SECTION}-----------------------------
+  //password change
+  const [password, setPassword] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const passwordHandler = (e) => {
+    const { name, value } = e.target;
+    setPassword({ ...password, [name]: value });
+    console.log("password", password);
+  };
+
+  //password change function
+  const changePassword = () => {
+    const userNow = auth.currentUser;
+    const oldPassword = password.oldPassword;
+    const newPassword = password.newPassword;
+    const confirmPassword = password.confirmPassword;
+
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    } else {
+      const credential = EmailAuthProvider.credential(
+        userNow.email,
+        oldPassword
+      );
+      reauthenticateWithCredential(userNow, credential)
+        .then(() => {
+          updatePassword(userNow, newPassword)
+            .then(() => {
+              console.log("Password updated successfully!");
+              toast.success("Password updated successfully!");
+            })
+            .catch((error) => {
+              console.error("Error updating password:", error.message);
+              toast.error("Error updating password:", error.message);
+            });
+        })
+        .catch((error) => {
+          console.error("Error re-authenticating:", error.message);
+          toast.error("Error re-authenticating:", error.message);
+        });
+    }
+  };
+
+  //-----------------------{log out}---------------------------------------
   const handleLogout = () => {
     auth
       .signOut()
@@ -156,12 +211,12 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex flex-row m-4 w-full">
+    <div className="flex flex-row mx-4 w-full">
       <div className="">
         <div className="place-items-start w-64 align-top items-center">
           <SideBar />
         </div>
-        <div className=" text-black w-64 h-full p-4"></div>
+        <div className=" text-black w-64 h-full"></div>
       </div>
 
       {/* profile picture section */}
@@ -203,144 +258,171 @@ const ProfilePage = () => {
             </div>
           </div>
         ) : (
-          <div className=" text-lg lg:text-2xl font-thin mt-5">
-            User not found
-          </div>
+          <div className=" text-lg lg:text-2xl font-thin mt-5"></div>
         )}
 
         {/* profile details section */}
         <div>
           {userData ? (
             <>
-              <hr className="mx-auto border-dashed rounded-md lg:w-full mt-12 mb-5" />
-              <div>
-                <div>
-                  <label htmlFor="userName" className="lg:ml-2 mb-2">
-                    User Name
-                  </label>
-                  <input
-                    id="userName"
-                    type="text"
-                    placeholder="John"
-                    name="userName"
-                    className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
-                    onChange={onChangeHandler}
-                    value={userData.userName}
-                  />
+              <form>
+                <hr className="mx-auto w-auto border-dashed rounded-md lg:w-full mt-2 mb-5" />
+                <section>
+                  <div className="double-input-label">
+                    <div className="single-input-label">
+                      <label htmlFor="userName" className="label">
+                        User Name
+                      </label>
+                      <input
+                        id="userName"
+                        type="text"
+                        placeholder="John"
+                        name="userName"
+                        className="input-field"
+                        onChange={onChangeHandler}
+                        value={userData.userName}
+                      />
+                    </div>
+                    <div className="single-input-label">
+                      <label htmlFor="userEmail" className="label">
+                        User Email
+                      </label>
+                      <input
+                        id="userEmail"
+                        type="text"
+                        placeholder="johnsmith@gmail.com"
+                        name="userEmail"
+                        className="input-field"
+                        value={userData.userEmail}
+                        disabled
+                      />
+                    </div>
+                  </div>
+                  <div className="double-input-label">
+                    <div className="single-input-label">
+                      <label htmlFor="department" className="label">
+                        Department
+                      </label>
+                      <select
+                        className="input-field"
+                        defaultValue={userData.department}
+                        onChange={onChangeHandler}
+                        id="department"
+                        type="select"
+                        name="department"
+                      >
+                        <option value="Civil">CEE</option>
+                        <option value="Electrical">EIE</option>
+                        <option value="Mechanical">MME</option>
+                        <option value="IS">IS</option>
+                      </select>
+                    </div>
+                    <div className="single-input-label">
+                      <label htmlFor="role" className="label">
+                        Role
+                      </label>
+                      <select
+                        className="input-field"
+                        defaultValue={userData.role}
+                        onChange={onChangeHandler}
+                        id="role"
+                        type="select"
+                        name="role"
+                        disabled
+                      >
+                        <option value="HOD">HOD</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Lecturer">Lecturer</option>
+                        <option value="Instructor">Instructor</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="single-input-label">
+                    <label htmlFor="contactNumber" className="label">
+                      Contact Number
+                    </label>
+                    <input
+                      id="contactNumber"
+                      type="text"
+                      placeholder="+94 000 000 000"
+                      name="contactNumber"
+                      className="input-field"
+                      onChange={onChangeHandler}
+                      value={userData.contactNumber}
+                    />
+                  </div>
 
-                  <label htmlFor="userEmail" className="lg:ml-2 mb-2">
-                    User Email
-                  </label>
-                  <input
-                    id="userEmail"
-                    type="text"
-                    placeholder="johnsmith@gmail.com"
-                    name="userEmail"
-                    className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
-                    value={userData.userEmail}
-                    disabled
-                  />
-                </div>
-                <div>
-                  <label htmlFor="department" className="lg:ml-2 mb-2">
-                    Department
-                  </label>
-                  <select
-                    className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
-                    defaultValue={userData.department}
-                    onChange={onChangeHandler}
-                    id="department"
-                    type="select"
-                    name="department"
+                  <button
+                    onClick={() => {
+                      userDetailsUpdate(userData.uid);
+                    }}
+                    className="btn"
                   >
-                    <option value="Civil">CEE</option>
-                    <option value="Electrical">EIE</option>
-                    <option value="Mechanical">MME</option>
-                    <option value="IS">IS</option>
-                  </select>
-
-                  <label htmlFor="role" className="lg:ml-2 mb-2">
-                    Role
-                  </label>
-                  <select
-                    className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
-                    defaultValue={userData.role}
-                    onChange={onChangeHandler}
-                    id="role"
-                    type="select"
-                    name="role"
-                    disabled
+                    Save Changes
+                  </button>
+                </section>
+                <hr className="mx-auto border-dashed rounded-md lg:w-full mt-12 mb-5" />
+                {/* Password section */}
+                <section>
+                  <h1 className="font-semibold text-lg m-2">Change Password</h1>
+                  <div className="single-input-label">
+                    <label htmlFor="oldPassword" className="label">
+                      Current Password
+                    </label>
+                    <input
+                      id="oldPassword"
+                      type="password"
+                      placeholder="********"
+                      name="oldPassword"
+                      className="input-field"
+                      onChange={passwordHandler}
+                    />
+                  </div>
+                  <div className="single-input-label">
+                    <label htmlFor="newPassword" className="label">
+                      New Password
+                    </label>
+                    <input
+                      id="newPassword"
+                      type="password"
+                      placeholder="********"
+                      name="newPassword"
+                      className="input-field"
+                      onChange={passwordHandler}
+                    />
+                  </div>
+                  <div className="single-input-label">
+                    <label htmlFor="confirmPassword" className="label">
+                      Confirm Password
+                    </label>
+                    <input
+                      id="confirmPassword"
+                      type="password"
+                      placeholder="******"
+                      name="confirmPassword"
+                      className="input-field"
+                      onChange={passwordHandler}
+                    />
+                  </div>
+                  <button onClick={changePassword} className="btn">
+                    Change Password
+                  </button>
+                </section>
+                <hr className="mx-auto border-dashed rounded-md lg:w-full mt-12 mb-5" />
+                {/* Logout section */}
+                <section>
+                  <button
+                    onClick={handleLogout}
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                   >
-                    <option value="HOD">HOD</option>
-                    <option value="Admin">Admin</option>
-                    <option value="Lecturer">Lecturer</option>
-                    <option value="Instructor">Instructor</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="contactNumber" className="lg:ml-2 mb-2">
-                    Contact Number
-                  </label>
-                  <input
-                    id="contactNumber"
-                    type="text"
-                    placeholder="+94 000 000 000"
-                    name="contactNumber"
-                    className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
-                    onChange={onChangeHandler}
-                    value={userData.contactNumber}
-                  />
-                </div>
-                <button
-                  onClick={() => {
-                    userDetailsUpdate(userData.uid);
-                  }}
-                  className="bg-[#4743E0] text-white px-8 py-2 rounded-full"
-                >
-                  Save Changes
-                </button>
-              </div>
-              <hr className="mx-auto border-dashed rounded-md lg:w-full mt-12 mb-5" />
-              {/* Password section */}
-              <div>
-                <h1 className="font-semibold text-lg m-2">Change Password</h1>
-                <div>
-                  <label htmlFor="password" className="lg:ml-2 mb-2">
-                    New Password
-                  </label>
-                  <input
-                    id="password"
-                    type="password"
-                    placeholder="********"
-                    name="password"
-                    className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
-                    // onChange={passwordHandler}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="confirmPassword" className="lg:ml-2 mb-2">
-                    Confirm Password
-                  </label>
-                  <input
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="******"
-                    name="confirmPassword"
-                    className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
-                    // onChange={confirmPasswordHandler}
-                  />
-                </div>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Log Out
-              </button>
+                    Log Out
+                  </button>
+                </section>
+              </form>
             </>
           ) : (
             <div className="flex flex-col items-center ml-96 mb-10 justify-center w-96 h-screen p-4">
-              <div className="animate-spin rounded-full h-16 w-16 border-t-4  border-b-4   border-[#4743E0]"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-s-2 border-b-1 border-[#4743E0]"></div>
               Loading
             </div>
           )}
