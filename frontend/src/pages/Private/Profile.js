@@ -7,7 +7,12 @@ import { firestore } from "../../config/firebase_configure";
 import { toast } from "react-toastify";
 import { getAuth, updateProfile } from "firebase/auth";
 import "react-toastify/dist/ReactToastify.css";
-import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import {
+  ref,
+  getDownloadURL,
+  uploadBytes,
+  deleteObject,
+} from "firebase/storage";
 import default_profile from "../../assets/user.jpg";
 
 const ProfilePage = () => {
@@ -56,7 +61,7 @@ const ProfilePage = () => {
             console.log("this is the url", url);
           })
           .catch((error) => {
-            console.log(error.message, "Error in setUrl");
+            console.log("Error in setUrl", error.message);
           });
         setProfilePic(null);
       }
@@ -73,23 +78,42 @@ const ProfilePage = () => {
   //prpofile pic upload
   const uploadpic = () => {
     const imageRef = ref(storage, `profile_pictures/${user.uid}`);
-    uploadBytes(imageRef, profilePic)
-      .then(() => {
-        getDownloadURL(imageRef)
-          .then((url) => {
-            setUrl(url);
-            console.log("this is the url", url);
+    const desertRef = ref(storage, `profile_pictures/${user.uid}`);
+    if (profilePic === null) {
+      toast.error("Please select a profile picture");
+      return;
+    } else {
+      if (`profile_pictures/${user.uid}`) {
+        deleteObject(desertRef)
+          .then(() => {
+            // toast.success("Profile Picture Deleted Successfully");
+            console.log("File deleted successfully");
           })
           .catch((error) => {
-            console.log(error.message, "Error in setUrl");
+            console.log("Error in deleting", error.message);
+            toast.error("Error in deleting exist profile picture");
           });
-        setProfilePic(null);
-      })
-      .catch((error) => {
-        console.log("Error in uploading", error.message);
-      });
-    updateProfile(user, { url });
-    toast.success("Profile Picture Uploaded Successfully");
+      }
+
+      uploadBytes(imageRef, profilePic)
+        .then(() => {
+          getDownloadURL(imageRef)
+            .then((url) => {
+              setUrl(url);
+              console.log("this is the url", url);
+            })
+            .catch((error) => {
+              console.log(error.message, "Error in setUrl");
+            });
+          setProfilePic(null);
+        })
+        .catch((error) => {
+          console.log("Error in uploading", error.message);
+        });
+      updateProfile(user, { url });
+      toast.success("Profile Picture Uploaded Successfully");
+      // window.location.reload();
+    }
   };
 
   //input field changes save and store
@@ -138,50 +162,72 @@ const ProfilePage = () => {
       {/* new profile feature */}
       <div className="p-2 flex flex-col">
         {user ? (
-          <div className="flex flex-row justify-between">
-            <div>
-              <h1 className="text-[#4743E0] text-6xl font-extrabold mb-3 lg:m-4">
-                Welcome, {user.userName}
-              </h1>
-            </div>
-            <div className="flex flex-col lg:flex-col items-center justify-center gap-4">
-              {/* Profile Picture */}
-              <div className="relative w-20 h-20 lg:w-40 lg:h-40 mb-6 lg:mb-0 mr-0 lg:mr-12">
-                <img
-                  src={url}
-                  alt="profile pic"
-                  className="w-full h-full object-cover rounded-full shadow-lg"
-                />
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-gray-900 bg-opacity-75 rounded-full">
-                  <input
-                    type="file"
-                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-                    onChange={handleInputPic}
-                  />
-                  <span className="text-white text-sm lg:text-base font-semibold">
-                    Change Picture
-                  </span>
-                </div>
+          <div>
+            <h1 className="text-[#4743E0] text-lg lg:text-6xl font-extrabold mb-3 lg:mb-8 mt-5 lg:mt-10">
+              Welcome, {user.userName}
+            </h1>
+            {/* Profile Picture */}
+            <div className="flex flex-col lg:flex-row items-center justify-center">
+              <div
+                className="flex flex-col justify-between"
+                style={{
+                  borderRadius: "50%",
+                  overflow: "hidden",
+                  width: 200,
+                  height: 200,
+                }}
+              >
+                {url ? (
+                  <div className="relative w-44 h-44 lg:w-60 lg:h-60 mb-6 lg:mb-0 mr-0 lg:mr-12">
+                    <img
+                      src={url}
+                      alt={"profile pic"}
+                      className="w-full h-full object-cover rounded-full shadow-lg"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-gray-900 bg-opacity-75 rounded-full">
+                      <input
+                        type="file"
+                        onChange={handleInputPic}
+                        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                      />
+                      <span className="text-white text-sm lg:text-base font-semibold">
+                        Change Picture
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="relative w-44 h-44">
+                    <img
+                      src={default_profile}
+                      alt={"profile pic"}
+                      className="w-full h-full object-cover rounded-full shadow-lg"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-gray-900 bg-opacity-75 rounded-full">
+                      <input
+                        type="file"
+                        onChange={handleInputPic}
+                        className="absolute opacity-0 cursor-pointer w-full h-full"
+                      />
+                      <span className="text-white text-sm lg:text-base font-semibold">
+                        Change Picture
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
               <div>
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={handleInputPic}
-                  id="profilePicInput"
-                />
-                <label
-                  htmlFor="profilePicInput"
-                  className="cursor-pointer bg-[#4743E0] text-white text-sm lg:text-base font-semibold  px-4 py-2 rounded-md shadow-md transition duration-300 ease-in-out hover:bg-opacity-80"
+                <button
+                  className="cursor-pointer bg-[#4743E0] text-white px-8 py-2 rounded-full ease-in-out hover:bg-opacity-80"
+                  onClick={uploadpic}
                 >
                   Upload
-                </label>
+                </button>
               </div>
             </div>
           </div>
         ) : (
-          <p></p>
-        )}
+           <div>user not found</div>
+        )}  
 
         <div>
           {userData ? (
@@ -314,7 +360,6 @@ const ProfilePage = () => {
             <div className="flex flex-col items-center ml-96 mb-10 justify-center w-96 h-screen p-4">
               <div className="animate-spin rounded-full h-16 w-16 border-t-4  border-b-4   border-[#4743E0]"></div>
               Loading
-            
             </div>
           )}
         </div>
