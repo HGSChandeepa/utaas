@@ -40,24 +40,5 @@
 
 
 /* Input Field */
-.input-field {
-  @apply bg-slate-50 border rounded-full py-2 px-3 mb-4 text-gray-700 w-72; /* Use text-gray-700 instead of text-grey-darker */
-}
 
-/* Button */
-.btn {
-  @apply bg-[#4743E0] text-white px-8 py-2 rounded-full;
-}
-
-/* Label */
-.label {
-  @apply lg:ml-2 mb-2 px-2 text-black;
-}
-
-.double-input-label {
-  @apply flex flex-col mb-4 lg:flex-row justify-between;
-}
-
-.single-input-label{
-  @apply flex flex-col lg:flex-row ; 
-}
+/*  */

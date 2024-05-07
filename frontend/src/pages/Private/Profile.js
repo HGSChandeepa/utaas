@@ -211,12 +211,9 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex flex-row mx-4 w-full">
+    <div className="flex flex-row w-full">
       <div className="">
-        <div className="place-items-start w-64 align-top items-center">
-          <SideBar />
-        </div>
-        <div className=" text-black w-64 h-full"></div>
+        <SideBar />
       </div>
 
       {/* profile picture section */}
@@ -270,7 +267,7 @@ const ProfilePage = () => {
                 <section>
                   <div className="double-input-label">
                     <div className="single-input-label">
-                      <label htmlFor="userName" className="label">
+                      <label htmlFor="userName" className="label justify-start">
                         User Name
                       </label>
                       <input
@@ -278,7 +275,7 @@ const ProfilePage = () => {
                         type="text"
                         placeholder="John"
                         name="userName"
-                        className="input-field"
+                        className="input-field justify-end"
                         onChange={onChangeHandler}
                         value={userData.userName}
                       />
@@ -292,7 +289,7 @@ const ProfilePage = () => {
                         type="text"
                         placeholder="johnsmith@gmail.com"
                         name="userEmail"
-                        className="input-field"
+                        className="input-field justify-end"
                         value={userData.userEmail}
                         disabled
                       />
