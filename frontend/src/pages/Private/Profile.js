@@ -266,6 +266,7 @@ const ProfilePage = () => {
             <>
               <hr className="mx-auto w-auto border-dashed rounded-md lg:w-full mt-2 mb-5" />
               <section>
+                <h1 className="font-semibold text-lg m-2">User Details</h1>
                 <form>
                   <div className="double-input-label">
                     <div className="single-input-label">
@@ -364,8 +365,8 @@ const ProfilePage = () => {
               <hr className="mx-auto border-dashed rounded-md lg:w-full mt-12 mb-5" />
               {/* Password section */}
               <section>
-                <form>
                   <h1 className="font-semibold text-lg m-2">Change Password</h1>
+                <form>
                   <div className="single-input-label">
                     <label htmlFor="oldPassword" className="label">
                       Current Password
