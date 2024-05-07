@@ -211,9 +211,11 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex flex-row w-full">
+    <div className="flex flex-row  w-full">
       <div className="">
-        <SideBar />
+        <div>
+          <SideBar />
+        </div>
       </div>
 
       {/* profile picture section */}
@@ -262,12 +264,12 @@ const ProfilePage = () => {
         <div>
           {userData ? (
             <>
-              <form>
-                <hr className="mx-auto w-auto border-dashed rounded-md lg:w-full mt-2 mb-5" />
-                <section>
+              <hr className="mx-auto w-auto border-dashed rounded-md lg:w-full mt-2 mb-5" />
+              <section>
+                <form>
                   <div className="double-input-label">
                     <div className="single-input-label">
-                      <label htmlFor="userName" className="label justify-start">
+                      <label htmlFor="userName" className="label">
                         User Name
                       </label>
                       <input
@@ -275,7 +277,7 @@ const ProfilePage = () => {
                         type="text"
                         placeholder="John"
                         name="userName"
-                        className="input-field justify-end"
+                        className="input-field"
                         onChange={onChangeHandler}
                         value={userData.userName}
                       />
@@ -289,7 +291,7 @@ const ProfilePage = () => {
                         type="text"
                         placeholder="johnsmith@gmail.com"
                         name="userEmail"
-                        className="input-field justify-end"
+                        className="input-field"
                         value={userData.userEmail}
                         disabled
                       />
@@ -348,19 +350,21 @@ const ProfilePage = () => {
                       value={userData.contactNumber}
                     />
                   </div>
+                </form>
 
-                  <button
-                    onClick={() => {
-                      userDetailsUpdate(userData.uid);
-                    }}
-                    className="btn"
-                  >
-                    Save Changes
-                  </button>
-                </section>
-                <hr className="mx-auto border-dashed rounded-md lg:w-full mt-12 mb-5" />
-                {/* Password section */}
-                <section>
+                <button
+                  onClick={() => {
+                    userDetailsUpdate(userData.uid);
+                  }}
+                  className="btn"
+                >
+                  Save Changes
+                </button>
+              </section>
+              <hr className="mx-auto border-dashed rounded-md lg:w-full mt-12 mb-5" />
+              {/* Password section */}
+              <section>
+                <form>
                   <h1 className="font-semibold text-lg m-2">Change Password</h1>
                   <div className="single-input-label">
                     <label htmlFor="oldPassword" className="label">
@@ -401,21 +405,21 @@ const ProfilePage = () => {
                       onChange={passwordHandler}
                     />
                   </div>
+                </form>
                   <button onClick={changePassword} className="btn">
                     Change Password
                   </button>
-                </section>
-                <hr className="mx-auto border-dashed rounded-md lg:w-full mt-12 mb-5" />
-                {/* Logout section */}
-                <section>
-                  <button
-                    onClick={handleLogout}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                  >
-                    Log Out
-                  </button>
-                </section>
-              </form>
+              </section>
+              <hr className="mx-auto border-dashed rounded-md lg:w-full mt-12 mb-5" />
+              {/* Logout section */}
+              <section>
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Log Out
+                </button>
+              </section>
             </>
           ) : (
             <div className="flex flex-col items-center ml-96 mb-10 justify-center w-96 h-screen p-4">
