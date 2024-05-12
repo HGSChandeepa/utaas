@@ -114,27 +114,23 @@ const Tasks = () => {
   };
 
   return (
-    <div className="flex flex-row ml-10 mt-10">
+    <div className="flex flex-row">
       <div>
-        <div className=" text-black w-64 h-full p-4"></div>
-      </div>
-
-      <div>
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-row gap-10">
           <div>
             <div className="place-items-start align-top items-center">
               <SideBar />
             </div>
+          </div>
+          <div className="flex flex-col w-[90%] gap-5 p-4">
             <div className="bg-yellow-100 text-yellow-800 w-40 flex gap-2 font-medium px-4 py-0.5 rounded-full text-md">
               {userRole} <span>Account</span>
             </div>
-          </div>
-          <div className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
               <h2 className="text-2xl font-semibold text-yellow-500">
                 Here Are Some Forms Submitted By You
               </h2>
-              <p className="text-gray-500">
+              <p className="text-gray-500 justify-start ">
                 Apply for leave by filling in the form below and submitting it
                 to your department head. You will be notified of the status of
                 your application. And also, you can apply for a loan by filling
@@ -144,7 +140,7 @@ const Tasks = () => {
             </div>
             {/* Cards */}
             <div className="flex flex-col gap-5">
-              <div className="w-[1200px]">
+              <div className="">
                 {toBeFirstReviewedExamForms.map(
                   (formData, index) =>
                     formData.current_step === 2 && (

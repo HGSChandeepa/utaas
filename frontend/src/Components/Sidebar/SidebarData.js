@@ -6,47 +6,48 @@ import { GrInProgress } from "react-icons/gr";
 import { GrFavorite } from "react-icons/gr";
 import { CgProfile } from "react-icons/cg";
 import { IoNotificationsOutline } from "react-icons/io5";
+
 export const SidebarData = [
   {
     title: "Dashboard",
     path: "/dashboard",
-    icon: <RxDashboard />,
+    icon: RxDashboard,
     cName: "nav-text",
   },
   {
     title: "Add New",
     path: "/myactivity",
-    icon: <FiActivity />,
+    icon: FiActivity,
     cName: "nav-text",
   },
   {
     title: "Tasks",
     path: "/tasks",
-    icon: <GrTask />,
+    icon: GrTask,
     cName: "nav-text",
   },
   {
     title: "Progress",
     path: "/progress",
-    icon: <GrInProgress />,
+    icon: GrInProgress,
     cName: "nav-text",
   },
   {
     title: "Favorites",
     path: "/favorites",
-    icon: <GrFavorite />,
+    icon: GrFavorite,
     cName: "nav-text",
   },
   {
     title: "Alerts",
     path: "/notifications",
-    icon: <IoNotificationsOutline />,
+    icon: IoNotificationsOutline,
     cName: "nav-text",
   },
   {
     title: "Profile",
     path: "/profile",
-    icon: <CgProfile />,
+    icon: CgProfile,
     cName: "nav-text",
   },
 ];

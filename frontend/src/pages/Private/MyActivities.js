@@ -5,7 +5,7 @@ import SelectionCard from "../../Components/Admin/SectionCard";
 import { SaveAllIcon } from "lucide-react";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const MyActivities = () => {
@@ -75,8 +75,6 @@ const MyActivities = () => {
     setSectionData(updatedData);
   };
 
-
-
   const newUserRole = userRole + "forms";
   const storeSectionData = () => {
     const exists = allSelectionCardData.cards.some((card) => {
@@ -128,15 +126,14 @@ const MyActivities = () => {
   console.log(allSelectionCardData);
 
   return (
-    <div className="flex flex-row ml-10 mt-10">
-      <div className="">
+    <div className="flex flex-row ">
+      <div>
         <div className="place-items-start align-top items-center">
           <SideBar />
         </div>
-        <div className=" text-black w-64 h-full p-4"></div>
       </div>
 
-      <div>
+      <div className="p-8">
         <section>
           <select
             className="border-2 rounded-full py-2 px-3 mb-4 text-grey-100 bg-slate-100 w-72"

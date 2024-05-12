@@ -1,38 +1,75 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { HiMenu } from "react-icons/hi";
 import { SidebarData } from "./SidebarData";
-import Logo from "../Logo/Logo";
 
-function SideBar() {
+const SideBar = () => {
+  const [open, setOpen] = useState(true);
+
+  const handleResize = () => {
+    setOpen(window.innerWidth >= 1200);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <>
-      <div className="">
-        <nav
-          className={`bg-white-300 h-full flex justify-center fixed top-0 left-0 transition-transform duration-350 bg-slate-50 px-5`}
+    <div className="grid grid-flow-col overflow-hidden h-full">
+      <section className="flex gap-6">
+        <div
+          className={`bg-slate-100 min-h-screen ${
+            open ? "w-72" : "w-16"
+          } duration-500 text-black-100 px-4`}
         >
-          <ul className=" ">
-            <Logo />
-            {SidebarData.map((item, index) => (
-              <li key={index} className={`${item.cName} nav-tex`}>
-                <Link
-                  to={item.path}
-                  className="flex items-center text-black text-lg w-95 h-full pb-4 "
+          <div className="py-3 flex justify-between">
+            <h1 className={`${!open && "hidden"} ml-2 text-3xl text-ellipsis text-[#4743E0] font-serif`}>UTAAS</h1>
+            <HiMenu
+              size={26}
+              className={`${!open} ml-1 cursor-pointer  justify-end`}
+              style={{
+                transitionDelay: `${3}00ms`,
+              }}
+              onClick={() => setOpen(!open)}
+            />
+          </div>
+          <div className="mt-4 flex flex-col gap-4 relative">
+            {SidebarData.map((menu, i) => (
+              <Link
+                to={menu.path}
+                key={i}
+                className={` ${
+                  menu.margin && "mt-5"
+                } group flex items-center text-sm border rounded-xl gap-4 font-medium p-2 hover:bg-blue-200 hover:text-blue-500`}
+              >
+                <div>{React.createElement(menu.icon, { size: "20" })}</div>
+                <h2
+                  style={{
+                    transitionDelay: `${i + 3}00ms`,
+                  }}
+                  className={`whitespace-pre duration-500 ${
+                    !open && "opacity-0 translate-x-28 overflow-hidden"
+                  }`}
                 >
-                  <span
-                    className="flex flex-row px-2 py-2 space-x-4 rounded-full  ml-4 w-52 border bg-blue-300 items-center hover:bg-blue-400 hover:text-white "
-                    onClick={() => {}}
-                  >
-                    <div className="pl-4">{item.icon}</div>
-                    <div>{item.title}</div>
-                  </span>
-                </Link>
-              </li>
+                  {menu.title}
+                </h2>
+                <h2
+                  className={`${
+                    open && "hidden"
+                  } absolute left-48 bg-white font-semibold whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit  `}
+                >
+                  {menu.title}
+                </h2>
+              </Link>
             ))}
-          </ul>
-        </nav>
-      </div>
-    </>
+          </div>
+        </div>
+      </section>
+    </div>
   );
-}
+};
 
 export default SideBar;

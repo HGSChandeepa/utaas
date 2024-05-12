@@ -57,23 +57,19 @@ const Tasks = () => {
   }, [userData]);
 
   return (
-    <div className="flex flex-row ml-10 mt-10">
-      <div className="">
-        <div className=" text-black w-64 h-full p-4"></div>
-      </div>
-
+    <div className="flex flex-row">
       <div>
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-row gap-10">
           <div>
             <div className="place-items-start align-top items-center">
               <SideBar />
             </div>
-            <div className="bg-yellow-100 text-yellow-800 w-fit flex gap-2 font-medium px-4 py-1 rounded-full text-md">
-              {userData && userData.userName} <span>Account</span>
-            </div>
           </div>
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-5 p-4">
             <div className="flex flex-col gap-2">
+              <div className="bg-yellow-100 text-yellow-800 w-fit flex gap-2 font-medium px-4 py-1 rounded-full text-md">
+                {userData && userData.userName} <span>Account</span>
+              </div>
               <p className="text-gray-500 ">
                 All Your Notifications are here and you can view them here and
                 take action on them also you can view the status of the
@@ -83,7 +79,7 @@ const Tasks = () => {
             </div>
             {/* cards */}
             <div className="flex flex-col gap-5">
-              <div className=" w-[1200px]">
+              <div className="">
                 {notifications.length > 0 ? (
                   notifications.map((notification, index) => (
                     <div
