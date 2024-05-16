@@ -127,10 +127,8 @@ const MyActivities = () => {
 
   return (
     <div className="flex flex-row ">
-      <div>
-        <div className="place-items-start align-top items-center">
-          <SideBar />
-        </div>
+      <div className="place-items-start align-top items-center">
+        <SideBar />
       </div>
 
       <div className="p-8">

@@ -51,7 +51,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-row ">
-      <div className="">
+      <div className="place-items-start align-top items-center">
         <SideBar />
       </div>
 
