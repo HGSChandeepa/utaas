@@ -211,11 +211,9 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex flex-row  w-full">
-      <div className="">
-        <div>
-          <SideBar />
-        </div>
+    <div className="flex flex-row  w-full scroll-smooth">
+      <div className="place-items-start align-top items-center relative ">
+        <SideBar />
       </div>
 
       {/* profile picture section */}
@@ -365,7 +363,7 @@ const ProfilePage = () => {
               <hr className="mx-auto border-dashed rounded-md lg:w-full mt-12 mb-5" />
               {/* Password section */}
               <section>
-                  <h1 className="font-semibold text-lg m-2">Change Password</h1>
+                <h1 className="font-semibold text-lg m-2">Change Password</h1>
                 <form>
                   <div className="single-input-label">
                     <label htmlFor="oldPassword" className="label">
@@ -407,9 +405,9 @@ const ProfilePage = () => {
                     />
                   </div>
                 </form>
-                  <button onClick={changePassword} className="btn">
-                    Change Password
-                  </button>
+                <button onClick={changePassword} className="btn">
+                  Change Password
+                </button>
               </section>
               <hr className="mx-auto border-dashed rounded-md lg:w-full mt-12 mb-5" />
               {/* Logout section */}

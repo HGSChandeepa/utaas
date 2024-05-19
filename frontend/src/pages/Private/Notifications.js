@@ -58,13 +58,11 @@ const Tasks = () => {
 
   return (
     <div className="flex flex-row">
+      <div className="place-items-start align-top items-center">
+        <SideBar />
+      </div>
       <div>
         <div className="flex flex-row gap-10">
-          <div>
-            <div className="place-items-start align-top items-center">
-              <SideBar />
-            </div>
-          </div>
           <div className="flex flex-col gap-5 p-4">
             <div className="flex flex-col gap-2">
               <div className="bg-yellow-100 text-yellow-800 w-fit flex gap-2 font-medium px-4 py-1 rounded-full text-md">
