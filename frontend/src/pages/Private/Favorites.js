@@ -2,11 +2,8 @@ import React, { useEffect, useState } from "react";
 import SideBar from "../../Components/Sidebar/SideBar";
 import { getFirestore, doc, getDoc, getDocs } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { TiEdit } from "react-icons/ti";
-
-import { FiDelete } from "react-icons/fi";
 
 const Tasks = () => {
   const [userData, setUserData] = useState(null);

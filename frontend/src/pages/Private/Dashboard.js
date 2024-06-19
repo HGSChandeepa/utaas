@@ -140,6 +140,12 @@ const Dashboard = () => {
                       description="Go to this step by step guideline process on how to certify for your weekly benefits."
                     />{" "}
                   </a>
+                  <a href="/dashboard/paper">
+                    <SampleCards
+                      title="Paper Marking Forms"
+                      description="Go to this step by step guideline process on how to certify for your weekly benefits."
+                    />{" "}
+                  </a>
                 </div>
               </div>
             </div>

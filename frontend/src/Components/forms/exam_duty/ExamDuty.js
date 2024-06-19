@@ -9,6 +9,7 @@ const FormComponentExamDuty = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [formData, setFormData] = useState({
+    form_type: "exam_duty",
     voucherNumber: "",
     date: "",
     currencyType: "",
@@ -34,6 +35,8 @@ const FormComponentExamDuty = () => {
     appvover_by_second_reciver: false,
     rejected_by_first_reciver: false,
     rejected_by_second_reciver: false,
+    current_step: 1,
+    no_of_steps: 3,
   });
 
   useEffect(() => {
@@ -66,6 +69,7 @@ const FormComponentExamDuty = () => {
         ...prevData,
         name: userData.userName,
         email: userData.userEmail,
+        current_step: 2,
       }));
     }
   }, [userData]);

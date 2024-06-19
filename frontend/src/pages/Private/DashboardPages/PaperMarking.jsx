@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import SideBar from "../../../Components/Sidebar/SideBar";
-import FormComponentExamDuty from "../../../Components/forms/exam_duty/ExamDuty";
 import { auth } from "../../../config/firebase_configure";
 import { doc, getDoc } from "firebase/firestore";
 import { firestore } from "../../../config/firebase_configure";
+import FormComponentPaperMarking from "../../../Components/forms/paper_marking/PaperMarking";
 
-function ExamDuty() {
+function PaperMarking() {
   const [userData, setUserData] = useState(null);
   const [userRole, setUserRole] = useState(null);
 
@@ -62,7 +62,7 @@ function ExamDuty() {
                 will be notified of the status of your application.
               </p>
               <div className="grid grid-cols-2">
-                <FormComponentExamDuty />
+                <FormComponentPaperMarking />
               </div>
             </div>
           </div>
@@ -72,4 +72,4 @@ function ExamDuty() {
   );
 }
 
-export default ExamDuty;
+export default PaperMarking;

@@ -8,23 +8,23 @@ import {
 } from "firebase/firestore";
 import { firestore } from "../../config/firebase_configure";
 
-//function to get all the exam docs in the firestore collection exam_forms store them in an array and return the array
-export const getExamForms = async () => {
-  const examForms = [];
-  const examFormsCollection = collection(firestore, "exam_duty");
-  const examFormsSnapshot = await getDocs(examFormsCollection);
-  examFormsSnapshot.forEach((doc) => {
-    examForms.push(doc.data());
+// Function to get all the paper marking docs in the Firestore collection paper_marking, store them in an array, and return the array
+export const getPaperMarkingForms = async () => {
+  const paperMarkingForms = [];
+  const paperMarkingFormsCollection = collection(firestore, "paper_marking");
+  const paperMarkingFormsSnapshot = await getDocs(paperMarkingFormsCollection);
+  paperMarkingFormsSnapshot.forEach((doc) => {
+    paperMarkingForms.push(doc.data());
   });
-  return examForms;
+  return paperMarkingForms;
 };
 
-//function to get all the forms wheere the first reviewer is the current user by the email
-export const getFirstReviewerForms = async (email) => {
-  const examForms = [];
-  const examFormsCollection = collection(firestore, "exam_duty");
-  const examFormsSnapshot = await getDocs(examFormsCollection);
-  examFormsSnapshot.forEach((doc) => {
+// Function to get all the forms where the first reviewer is the current user by the email
+export const getFirstReviewerPaperMarkingForms = async (email) => {
+  const paperMarkingForms = [];
+  const paperMarkingFormsCollection = collection(firestore, "paper_marking");
+  const paperMarkingFormsSnapshot = await getDocs(paperMarkingFormsCollection);
+  paperMarkingFormsSnapshot.forEach((doc) => {
     const formData = doc.data();
     console.log(email, formData.first_reciver_email);
 
@@ -33,21 +33,21 @@ export const getFirstReviewerForms = async (email) => {
       formData.email &&
       formData.first_reciver_email.trim() === email.trim()
     ) {
-      examForms.push(doc.data());
+      paperMarkingForms.push(doc.data());
     }
   });
 
-  console.log(examForms);
+  console.log(paperMarkingForms);
 
-  return examForms;
+  return paperMarkingForms;
 };
 
-//function to get all the forms where the second reviewer is the current user by the email
-export const getSecondReviewerForms = async (email) => {
-  const examForms = [];
-  const examFormsCollection = collection(firestore, "exam_duty");
-  const examFormsSnapshot = await getDocs(examFormsCollection);
-  examFormsSnapshot.forEach((doc) => {
+// Function to get all the forms where the second reviewer is the current user by the email
+export const getSecondReviewerPaperMarkingForms = async (email) => {
+  const paperMarkingForms = [];
+  const paperMarkingFormsCollection = collection(firestore, "paper_marking");
+  const paperMarkingFormsSnapshot = await getDocs(paperMarkingFormsCollection);
+  paperMarkingFormsSnapshot.forEach((doc) => {
     const formData = doc.data();
 
     if (
@@ -55,55 +55,60 @@ export const getSecondReviewerForms = async (email) => {
       formData.email &&
       formData.second_reciver_email.trim() === email.trim()
     ) {
-      examForms.push(doc.data());
+      paperMarkingForms.push(doc.data());
     }
   });
 
-  return examForms;
+  return paperMarkingForms;
 };
 
-//get all the forms submited by the current user
-export const getAllFormsByCurrentUser = async (email) => {
-  const examForms = [];
+// Function to get all the forms submitted by the current user
+export const getAllPaperMarkingFormsByCurrentUser = async (email) => {
+  const paperMarkingForms = [];
   console.log(email);
-  const examFormsCollection = collection(firestore, "exam_duty");
-  const examFormsSnapshot = await getDocs(examFormsCollection);
-  examFormsSnapshot.forEach((doc) => {
+  const paperMarkingFormsCollection = collection(firestore, "paper_marking");
+  const paperMarkingFormsSnapshot = await getDocs(paperMarkingFormsCollection);
+  paperMarkingFormsSnapshot.forEach((doc) => {
     const formData = doc.data();
 
     console.log(formData);
 
     if (formData && formData.email && formData.email.trim() === email.trim()) {
-      examForms.push(formData);
+      paperMarkingForms.push(formData);
     }
 
-    console.log(examForms);
+    console.log(paperMarkingForms);
   });
 
-  return examForms;
+  return paperMarkingForms;
 };
 
-//methode to get the form by the form id
-export const getFormById = async (formId) => {
-  const examFormRef = doc(collection(firestore, "exam_duty"), formId);
-  const examFormDoc = await getDoc(examFormRef);
+// Method to get the form by the form id
+export const getPaperMarkingFormById = async (formId) => {
+  const paperMarkingFormRef = doc(
+    collection(firestore, "paper_marking"),
+    formId
+  );
+  const paperMarkingFormDoc = await getDoc(paperMarkingFormRef);
 
-  if (examFormDoc.exists()) {
-    return examFormDoc.data();
+  if (paperMarkingFormDoc.exists()) {
+    return paperMarkingFormDoc.data();
   } else {
     console.log("Form not found for the specified form ID.");
   }
 };
 
-// methode to approve by the first reviewer
+// Method to approve by the first reviewer
+export const approveFirstReviewerServicePaperMarking = async (formId) => {
+  const paperMarkingFormRef = doc(
+    collection(firestore, "paper_marking"),
+    formId
+  );
+  const paperMarkingFormDoc = await getDoc(paperMarkingFormRef);
 
-export const approveFirstReviewerService = async (formId) => {
-  const examFormRef = doc(collection(firestore, "exam_duty"), formId);
-  const examFormDoc = await getDoc(examFormRef);
-
-  if (examFormDoc.exists()) {
+  if (paperMarkingFormDoc.exists()) {
     await setDoc(
-      examFormDoc.ref,
+      paperMarkingFormDoc.ref,
       { appvover_by_first_reciver: true, current_step: 3 },
       { merge: true }
     );
@@ -113,7 +118,7 @@ export const approveFirstReviewerService = async (formId) => {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
         message: `Form ${formId} has been approved by the first reviewer.`,
-        formData: examFormDoc.data(), // Add form data to the notification
+        formData: paperMarkingFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
       });
     } catch (error) {
@@ -126,14 +131,17 @@ export const approveFirstReviewerService = async (formId) => {
   }
 };
 
-// methode to approve by the second reviewer
-export const approveSecondReviewerService = async (formId) => {
-  const examFormRef = doc(collection(firestore, "exam_duty"), formId);
-  const examFormDoc = await getDoc(examFormRef);
+// Method to approve by the second reviewer
+export const approveSecondReviewerServicePaperMarking = async (formId) => {
+  const paperMarkingFormRef = doc(
+    collection(firestore, "paper_marking"),
+    formId
+  );
+  const paperMarkingFormDoc = await getDoc(paperMarkingFormRef);
 
-  if (examFormDoc.exists()) {
+  if (paperMarkingFormDoc.exists()) {
     await setDoc(
-      examFormDoc.ref,
+      paperMarkingFormDoc.ref,
       { appvover_by_second_reciver: true, current_step: 4 },
       { merge: true }
     );
@@ -143,7 +151,7 @@ export const approveSecondReviewerService = async (formId) => {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
         message: `Form ${formId} has been approved by the second reviewer.`,
-        formData: examFormDoc.data(), // Add form data to the notification
+        formData: paperMarkingFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
       });
     } catch (error) {
@@ -156,14 +164,17 @@ export const approveSecondReviewerService = async (formId) => {
   }
 };
 
-//methode to reject by the first reviewer and send notification to the applicant
-export const rejectFirstReviewerService = async (formId) => {
-  const examFormRef = doc(collection(firestore, "exam_duty"), formId);
-  const examFormDoc = await getDoc(examFormRef);
+// Method to reject by the first reviewer and send notification to the applicant
+export const rejectFirstReviewerServicePaperMarking = async (formId) => {
+  const paperMarkingFormRef = doc(
+    collection(firestore, "paper_marking"),
+    formId
+  );
+  const paperMarkingFormDoc = await getDoc(paperMarkingFormRef);
 
-  if (examFormDoc.exists()) {
+  if (paperMarkingFormDoc.exists()) {
     await setDoc(
-      examFormDoc.ref,
+      paperMarkingFormDoc.ref,
       {
         appvover_by_first_reciver: false,
         rejected_by_first_reciver: true,
@@ -177,7 +188,7 @@ export const rejectFirstReviewerService = async (formId) => {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
         message: `Form ${formId} has been rejected by the first reviewer.`,
-        formData: examFormDoc.data(), // Add form data to the notification
+        formData: paperMarkingFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
       });
     } catch (error) {
@@ -190,14 +201,17 @@ export const rejectFirstReviewerService = async (formId) => {
   }
 };
 
-//methode to reject by the second reviewer and send notification to the applicant
-export const rejectSecondReviewerService = async (formId) => {
-  const examFormRef = doc(collection(firestore, "exam_duty"), formId);
-  const examFormDoc = await getDoc(examFormRef);
+// Method to reject by the second reviewer and send notification to the applicant
+export const rejectSecondReviewerServicePaperMarking = async (formId) => {
+  const paperMarkingFormRef = doc(
+    collection(firestore, "paper_marking"),
+    formId
+  );
+  const paperMarkingFormDoc = await getDoc(paperMarkingFormRef);
 
-  if (examFormDoc.exists()) {
+  if (paperMarkingFormDoc.exists()) {
     await setDoc(
-      examFormDoc.ref,
+      paperMarkingFormDoc.ref,
       {
         appvover_by_second_reciver: false,
         rejected_by_second_reciver: true,
@@ -211,7 +225,7 @@ export const rejectSecondReviewerService = async (formId) => {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
         message: `Form ${formId} has been rejected by the second reviewer.`,
-        formData: examFormDoc.data(), // Add form data to the notification
+        formData: paperMarkingFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
       });
     } catch (error) {
@@ -224,14 +238,17 @@ export const rejectSecondReviewerService = async (formId) => {
   }
 };
 
-//methoed to edited by the first reviewer and send notification to the applicant
-export const editedByFirstReviewerService = async (formId) => {
-  const examFormRef = doc(collection(firestore, "exam_duty"), formId);
-  const examFormDoc = await getDoc(examFormRef);
+// Method to be edited by the first reviewer and send notification to the applicant
+export const editedByFirstReviewerServicePaperMarking = async (formId) => {
+  const paperMarkingFormRef = doc(
+    collection(firestore, "paper_marking"),
+    formId
+  );
+  const paperMarkingFormDoc = await getDoc(paperMarkingFormRef);
 
-  if (examFormDoc.exists()) {
+  if (paperMarkingFormDoc.exists()) {
     await setDoc(
-      examFormDoc.ref,
+      paperMarkingFormDoc.ref,
       {
         edited_by_first_reciver: true,
         current_step: 2,
@@ -244,7 +261,7 @@ export const editedByFirstReviewerService = async (formId) => {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
         message: `Form ${formId} has been edited by the first reviewer.`,
-        formData: examFormDoc.data(), // Add form data to the notification
+        formData: paperMarkingFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
       });
       console.log("Form edited by the first reviewer.");
@@ -258,14 +275,17 @@ export const editedByFirstReviewerService = async (formId) => {
   }
 };
 
-//methoed to edited by the second reviewer and send notification to the applicant
-export const editedBySecondReviewerService = async (formId) => {
-  const examFormRef = doc(collection(firestore, "exam_duty"), formId);
-  const examFormDoc = await getDoc(examFormRef);
+// Method to be edited by the second reviewer and send notification to the applicant
+export const editedBySecondReviewerServicePaperMarking = async (formId) => {
+  const paperMarkingFormRef = doc(
+    collection(firestore, "paper_marking"),
+    formId
+  );
+  const paperMarkingFormDoc = await getDoc(paperMarkingFormRef);
 
-  if (examFormDoc.exists()) {
+  if (paperMarkingFormDoc.exists()) {
     await setDoc(
-      examFormDoc.ref,
+      paperMarkingFormDoc.ref,
       {
         edited_by_second_reciver: true,
         current_step: 3,
@@ -278,7 +298,7 @@ export const editedBySecondReviewerService = async (formId) => {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
         message: `Form ${formId} has been edited by the second reviewer.`,
-        formData: examFormDoc.data(), // Add form data to the notification
+        formData: paperMarkingFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
       });
     } catch (error) {
@@ -291,7 +311,7 @@ export const editedBySecondReviewerService = async (formId) => {
   }
 };
 
-//function to get all the notifications for the current user
+// Function to get all the notifications for the current user
 export const getNotifications = async (email) => {
   const notifications = [];
   const notificationsCollection = collection(firestore, "notifications");
