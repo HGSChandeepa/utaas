@@ -1,33 +1,50 @@
 import React, { useState, useEffect } from "react";
 import { collection, addDoc } from "firebase/firestore";
-import { TiEdit } from "react-icons/ti";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { auth } from "../../../config/firebase_configure";
+import { auth, firestore } from "../../../config/firebase_configure";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { firestore } from "../../../config/firebase_configure";
 import { useNavigate } from "react-router-dom";
 
 const FormComponentExamDuty = () => {
-  //navigation
   const navigate = useNavigate();
-  //fetch the user data
   const [userData, setUserData] = useState(null);
+  const [formData, setFormData] = useState({
+    voucherNumber: "",
+    date: "",
+    currencyType: "",
+    noOfCheques: "",
+    name: "",
+    email: "",
+    post: "",
+    reservedAddress: "",
+    examinationName: "",
+    examinationHall: "",
+    completedExamDuty: "",
+    tableEntries: [{ date: "", startTime: "", endTime: "", amountToBePaid: 0 }],
+    isDataTrue: false,
+    totalAmount: 0,
+    first_reciver_email: "rajitha@eie.ruh.ac.lk",
+    second_reciver_email: "devikar@is.ruh.ac.lk",
+    first_reciver_role: "HOD",
+    second_reciver_role: "Admin",
+    edited_by_applicant: true,
+    edited_by_first_reciver: false,
+    edited_by_second_reciver: false,
+    appvover_by_first_reciver: false,
+    appvover_by_second_reciver: false,
+    rejected_by_first_reciver: false,
+    rejected_by_second_reciver: false,
+  });
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        console.log(user.uid);
         const docRef = doc(firestore, "users", user.uid);
-        const docSnap = getDoc(docRef);
-        //set the user data to the state
-        docSnap
-          .then((doc) => {
-            if (doc.exists()) {
-              const userData = doc.data();
-
+        getDoc(docRef)
+          .then((docSnap) => {
+            if (docSnap.exists()) {
+              const userData = docSnap.data();
               setUserData(userData);
-              console.log(userData);
             } else {
               console.log("No such document!");
             }
@@ -43,157 +60,128 @@ const FormComponentExamDuty = () => {
     return unsubscribe;
   }, []);
 
-  //form data
-  const [formData, setFormData] = useState({
-    date: "",
-    location: "",
-    applicant_name: userData && userData.userName,
-    applicant_email: userData && userData.userEmail,
-    no_of_steps: 3,
-    visible_to: ["Lecturer", "HOD", "Instructor"],
-    form_type: "exam_duty",
-    current_step: 1,
-    first_reciver_email: "rajitha@eie.ruh.ac.lk",
-    second_reciver_email: "devikar@is.ruh.ac.lk",
-    first_reciver_role: "HOD",
-    second_reciver_role: "Admin",
-    duty: "",
-    role: "",
-    amount: "",
-    department: "",
-    edited_by_applicant: true,
-    edited_by_first_reciver: false,
-    edited_by_second_reciver: false,
-    appvover_by_first_reciver: false,
-    appvover_by_second_reciver: false,
-    rejected_by_first_reciver: false,
-    rejected_by_second_reciver: false,
-  });
-  //include user name and email in the form data
   useEffect(() => {
-    setFormData((prevData) => ({
-      ...prevData,
-      applicant_name: userData && userData.userName,
-      applicant_email: userData && userData.userEmail,
-      no_of_steps: 3,
-      visible_to: ["Lecturer", "HOD", "Instructor"],
-      form_type: "exam_duty",
-      applicant_filled_time: new Date().toLocaleString(),
-      current_step: 2,
-      first_reciver_email: "rajitha@eie.ruh.ac.lk",
-      second_reciver_email: "devikar@is.ruh.ac.lk",
-      first_reciver_role: "HOD",
-      second_reciver_role: "Admin",
-      edited_by_applicant: true,
-      edited_by_first_reciver: false,
-      edited_by_second_reciver: false,
-      appvover_by_first_reciver: false,
-      appvover_by_second_reciver: false,
-      rejected_by_first_reciver: false,
-      rejected_by_second_reciver: false,
-    }));
+    if (userData) {
+      setFormData((prevData) => ({
+        ...prevData,
+        name: userData.userName,
+        email: userData.userEmail,
+      }));
+    }
   }, [userData]);
 
-  //handle form change
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
+
+  const handleTableChange = (index, e) => {
+    const { name, value } = e.target;
+    const newTableEntries = formData.tableEntries.map((entry, i) => {
+      if (i === index) {
+        return { ...entry, [name]: value };
+      }
+      return entry;
+    });
+    setFormData((prevData) => ({
+      ...prevData,
+      tableEntries: newTableEntries,
+    }));
+  };
+
+  const addTableRow = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      tableEntries: [
+        ...prevData.tableEntries,
+        { date: "", startTime: "", endTime: "", amountToBePaid: 0 },
+      ],
+    }));
+  };
+
+  const removeTableRow = (index) => {
+    const newTableEntries = formData.tableEntries.filter((_, i) => i !== index);
+    setFormData((prevData) => ({
+      ...prevData,
+      tableEntries: newTableEntries,
+    }));
+  };
+
+  const calculateTotalAmount = () => {
+    const total = formData.tableEntries.reduce(
+      (sum, entry) => sum + parseFloat(entry.amountToBePaid || 0),
+      0
+    );
+    setFormData((prevData) => ({
+      ...prevData,
+      totalAmount: total,
+    }));
+  };
+
+  useEffect(() => {
+    calculateTotalAmount();
+  }, [formData.tableEntries]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
+      !formData.voucherNumber ||
       !formData.date ||
-      !formData.location ||
-      !formData.duty ||
-      !formData.role ||
-      !formData.amount ||
-      !formData.department
+      !formData.currencyType ||
+      !formData.noOfCheques ||
+      !formData.name ||
+      !formData.email ||
+      !formData.post ||
+      !formData.reservedAddress ||
+      !formData.examinationName ||
+      !formData.examinationHall ||
+      !formData.completedExamDuty ||
+      !formData.isDataTrue
     ) {
-      console.error("Please fill in all fields");
-      // add toast
-      toast.error("Please fill in all fields");
+      toast.error("Please fill in all fields and confirm the data is true");
       return;
     }
 
     try {
-      console.log("Form submitted with data:", formData);
-      // Store the form data in the Firestore under the collection name exam_duty
       const docRef = await addDoc(collection(firestore, "exam_duty"), formData);
-      console.log("Document written with ID: ", docRef.id);
+      await updateDoc(doc(firestore, "exam_duty", docRef.id), {
+        form_id: docRef.id,
+      });
 
-      // Update the Firestore document with the form_id
-      const formDocRef = doc(firestore, "exam_duty", docRef.id);
-      await updateDoc(formDocRef, { form_id: docRef.id });
-
-      // Add toast
       toast.success("Form submitted successfully");
-
-      // Navigate to the dashboard
       navigate("/dashboard");
     } catch (error) {
-      console.error("Error submitting form:", error.message);
-      // Add toast
       toast.error("Error submitting form: " + error.message);
     }
   };
 
   return (
-    <div className="w-[1000px] mx-auto my-8 p-6 bg-slate-100 rounded-md   border-2">
-      <h2 className=" text-2xl font-semibold text-blue-600 border-b-4">
+    <div className="w-[1000px] mx-auto my-8 p-6 bg-slate-300 rounded-md border-2">
+      <h2 className="text-2xl font-semibold text-blue-600 border-b-4">
         Exam Duties
       </h2>
-      <p className=" my-8 text-slate-500">
-        This form is submitted by Admin and please fill this form before 2 days
-        ( 48 hours). Exam duty form is used to apply for exam duty. Please fill
-        in the form.
-      </p>
-
-      <div className=" my-5 bg-slate-300 p-4 rounded-full cursor-pointer">
-        <ol class="items-center w-full space-y-4 sm:flex sm:space-x-8 sm:space-y-0 rtl:space-x-reverse">
-          <li class="flex items-center text-blue-600 dark:text-blue-500 space-x-2.5 rtl:space-x-reverse">
-            <span class="flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
-              1
-            </span>
-            <span>
-              <h3 class="font-medium leading-tight">User info</h3>
-              <p class="text-sm">Step details here</p>
-            </span>
-          </li>
-          <li class="flex items-center text-gray-500 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
-            <span class="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">
-              2
-            </span>
-            <span>
-              <h3 class="font-medium leading-tight">HOD review</h3>
-              <p class="text-sm">Second approval</p>
-            </span>
-          </li>
-          <li class="flex items-center text-gray-500 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
-            <span class="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">
-              3
-            </span>
-            <span>
-              <h3 class="font-medium leading-tight">Admin Finalization</h3>
-              <p class="text-sm">Final Step</p>
-            </span>
-          </li>
-        </ol>
-      </div>
-      <section className=" py-5">
-        <div className="flex flex-row justify-between items-center">
-          <div className="flex gap-2">
-            <button className="bg-yellow-100 text-yellow-800 flex items-center gap-4   font-medium px-4 py-2 rounded-full text-md">
-              Add In To Favourites <TiEdit />
-            </button>
-          </div>
-        </div>
-      </section>
       <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label
+            className="block text-gray-600 font-semibold mb-2"
+            htmlFor="voucherNumber"
+          >
+            Voucher Number
+          </label>
+          <input
+            type="text"
+            id="voucherNumber"
+            name="voucherNumber"
+            value={formData.voucherNumber}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+
         <div className="mb-4">
           <label
             className="block text-gray-600 font-semibold mb-2"
@@ -207,58 +195,22 @@ const FormComponentExamDuty = () => {
             name="date"
             value={formData.date}
             onChange={handleChange}
-            //defaultValue as now"
-
-            className=" px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
-          />
-        </div>
-
-        <div>
-          <select
-            className="border rounded-full py-2 px-3 mb-4 text-grey-darker w-72"
-            defaultValue=""
-            onChange={handleChange}
-            name="department"
-            value={formData.department}
-          >
-            <option value="" disabled>
-              Select Department
-            </option>
-            <option value="Civil">CEE</option>
-            <option value="Electrical">EIE</option>
-            <option value="Mechanical">MME</option>
-            <option value="IS">IS</option>
-          </select>
-        </div>
-
-        <div className="mb-4">
-          <label
-            className="block text-gray-600 font-semibold mb-2"
-            htmlFor="location"
-          >
-            Applicant Name
-          </label>
-          <input
-            type="text"
-            id="location"
-            name="location"
-            value={userData && userData.userName}
-            onChange={handleChange}
             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
+
         <div className="mb-4">
           <label
             className="block text-gray-600 font-semibold mb-2"
-            htmlFor="location"
+            htmlFor="currencyType"
           >
-            Applicant Email
+            Currency Type
           </label>
           <input
             type="text"
-            id="location"
-            name="location"
-            value={userData && userData.userEmail}
+            id="currencyType"
+            name="currencyType"
+            value={formData.currencyType}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
@@ -267,15 +219,15 @@ const FormComponentExamDuty = () => {
         <div className="mb-4">
           <label
             className="block text-gray-600 font-semibold mb-2"
-            htmlFor="location"
+            htmlFor="noOfCheques"
           >
-            Application For
+            No. Of Cheques
           </label>
           <input
-            type="text"
-            id="location"
-            name="location"
-            value={formData.location}
+            type="number"
+            id="noOfCheques"
+            name="noOfCheques"
+            value={formData.noOfCheques}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
@@ -284,15 +236,15 @@ const FormComponentExamDuty = () => {
         <div className="mb-4">
           <label
             className="block text-gray-600 font-semibold mb-2"
-            htmlFor="duty"
+            htmlFor="name"
           >
-            Possible Time and Date
+            Name
           </label>
           <input
             type="text"
-            id="duty"
-            name="duty"
-            value={formData.duty}
+            id="name"
+            name="name"
+            value={formData.name}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
@@ -301,15 +253,15 @@ const FormComponentExamDuty = () => {
         <div className="mb-4">
           <label
             className="block text-gray-600 font-semibold mb-2"
-            htmlFor="role"
+            htmlFor="email"
           >
-            Applying Position
+            Email
           </label>
           <input
             type="text"
-            id="role"
-            name="role"
-            value={formData.role}
+            id="email"
+            name="email"
+            value={formData.email}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
@@ -318,17 +270,205 @@ const FormComponentExamDuty = () => {
         <div className="mb-4">
           <label
             className="block text-gray-600 font-semibold mb-2"
-            htmlFor="amount"
+            htmlFor="post"
           >
-            No Of Days
+            Post
           </label>
           <input
             type="text"
-            id="amount"
-            name="amount"
-            value={formData.amount}
+            id="post"
+            name="post"
+            value={formData.post}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label
+            className="block text-gray-600 font-semibold mb-2"
+            htmlFor="reservedAddress"
+          >
+            The Reserved Address
+          </label>
+          <input
+            type="text"
+            id="reservedAddress"
+            name="reservedAddress"
+            value={formData.reservedAddress}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label
+            className="block text-gray-600 font-semibold mb-2"
+            htmlFor="examinationName"
+          >
+            Examination Name
+          </label>
+          <input
+            type="text"
+            id="examinationName"
+            name="examinationName"
+            value={formData.examinationName}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label
+            className="block text-gray-600 font-semibold mb-2"
+            htmlFor="examinationHall"
+          >
+            Examination Hall
+          </label>
+          <input
+            type="text"
+            id="examinationHall"
+            name="examinationHall"
+            value={formData.examinationHall}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label
+            className="block text-gray-600 font-semibold mb-2"
+            htmlFor="completedExamDuty"
+          >
+            Completed Exam Duty
+          </label>
+          <input
+            type="text"
+            id="completedExamDuty"
+            name="completedExamDuty"
+            value={formData.completedExamDuty}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+
+        <h3 className="text-lg font-semibold text-gray-700 mb-2">
+          Fill the table accordingly
+        </h3>
+        {formData.tableEntries.map((entry, index) => (
+          <div key={index} className="mb-4 border p-4 rounded-md">
+            <div className="flex justify-between items-center">
+              <label
+                className="block text-gray-600 font-semibold mb-2"
+                htmlFor={`date-${index}`}
+              >
+                Date
+              </label>
+              <input
+                type="date"
+                id={`date-${index}`}
+                name="date"
+                value={entry.date}
+                onChange={(e) => handleTableChange(index, e)}
+                className="w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            <div className="flex justify-between items-center mt-2">
+              <label
+                className="block text-gray-600 font-semibold mb-2"
+                htmlFor={`startTime-${index}`}
+              >
+                Start Time
+              </label>
+              <input
+                type="time"
+                id={`startTime-${index}`}
+                name="startTime"
+                value={entry.startTime}
+                onChange={(e) => handleTableChange(index, e)}
+                className="w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            <div className="flex justify-between items-center mt-2">
+              <label
+                className="block text-gray-600 font-semibold mb-2"
+                htmlFor={`endTime-${index}`}
+              >
+                End Time
+              </label>
+              <input
+                type="time"
+                id={`endTime-${index}`}
+                name="endTime"
+                value={entry.endTime}
+                onChange={(e) => handleTableChange(index, e)}
+                className="w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            <div className="flex justify-between items-center mt-2">
+              <label
+                className="block text-gray-600 font-semibold mb-2"
+                htmlFor={`amountToBePaid-${index}`}
+              >
+                Amount to be Paid
+              </label>
+              <input
+                type="number"
+                id={`amountToBePaid-${index}`}
+                name="amountToBePaid"
+                value={entry.amountToBePaid}
+                onChange={(e) => handleTableChange(index, e)}
+                className="w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => removeTableRow(index)}
+              className="bg-red-500 text-white px-4 py-2 mt-2 rounded-md hover:bg-red-600 focus:outline-none focus:shadow-outline-red"
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={addTableRow}
+          className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:shadow-outline-gray"
+        >
+          New+
+        </button>
+
+        <div className="mt-4">
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="isDataTrue"
+              name="isDataTrue"
+              checked={formData.isDataTrue}
+              onChange={handleChange}
+              className="mr-2"
+            />
+            <label htmlFor="isDataTrue" className="text-gray-600">
+              I hereby promise these amounts are true and the details I entered
+              are true.
+            </label>
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <label
+            className="block text-gray-600 font-semibold mb-2"
+            htmlFor="totalAmount"
+          >
+            Total Amount
+          </label>
+          <input
+            type="number"
+            id="totalAmount"
+            name="totalAmount"
+            value={formData.totalAmount}
+            readOnly
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 bg-gray-200"
           />
         </div>
 

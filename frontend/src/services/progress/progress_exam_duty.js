@@ -68,11 +68,9 @@ export const getAllFormsByCurrentUser = async (email) => {
   examFormsSnapshot.forEach((doc) => {
     const formData = doc.data();
 
-    if (
-      formData &&
-      formData.applicant_email &&
-      formData.applicant_email.trim() === email.trim()
-    ) {
+    console.log(formData);
+
+    if (formData && formData.email && formData.email.trim() === email.trim()) {
       examForms.push(formData);
     }
 
