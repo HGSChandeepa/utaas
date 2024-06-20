@@ -23,6 +23,7 @@ import {
   rejectFirstReviewerServicePaperMarking,
   rejectSecondReviewerServicePaperMarking,
 } from "../../services/progress/progress_paper_marking";
+import { formImage } from "../../../src/assets/index";
 
 const Tasks = () => {
   const [userData, setUserData] = useState(null);
@@ -220,39 +221,52 @@ const Tasks = () => {
       </div>
       <div>
         <div className="flex flex-col gap-2 p-9">
-          <div className="bg-yellow-100 text-yellow-800 w-fit  flex gap-2 font-medium px-4 py-0.5 rounded-full text-md">
+          <div
+            className={`font-medium px-2.5 py-0.5 rounded-full text-md w-fit ${
+              userRole === "HOD"
+                ? "bg-blue-100 text-blue-800"
+                : userRole === "Admin"
+                ? "bg-green-100 text-green-800"
+                : userRole === "Lecturer"
+                ? "bg-yellow-100 text-yellow-800"
+                : ""
+            }`}
+          >
             {userRole} <span>Account</span>
           </div>
-          <h2 className="text-2xl font-semibold text-yellow-500">
-            Here Are Some Forms Submitted By You
+          <h2
+            className={`text-2xl font-semibold ${
+              userRole === "HOD"
+                ? "text-blue-500"
+                : userRole === "Admin"
+                ? "text-green-500"
+                : userRole === "Lecturer"
+                ? "text-yellow-500"
+                : ""
+            }`}
+          >
+            Here are the forms that need your review
           </h2>
-          <p className="text-gray-500 justify-start ">
-            Apply for leave by filling in the form below and submitting it to
-            your department head. You will be notified of the status of your
-            application. And also, you can apply for a loan by filling in the
-            form below and submitting it to your department head. You will be
-            notified of the status of your application.
+          <p className="text-gray-700 justify-start ">
+            You can approve or reject the forms below, based on the information
+            and documents provided also you can edit the form if needed. and
+            notify the applicant about the decision.then the form will be sent
+            to the next reviewer.feel free to contact the applicant if you need
+            more information.
           </p>
         </div>
         {loading && (
-          <div className="flex justify-center items-center h-full">
-            <div role="status">
-              <svg
-                aria-hidden="true"
-                className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-                viewBox="0 0 100 101"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                  fill="currentFill"
-                />
-              </svg>
+          <div className="flex flex-col gap-5 justify-start mx-10  h-full">
+            <div role="status" className="max-w-sm animate-pulse">
+              <div className="h-2.5 bg-gray-200 rounded-full  w-[500px] mb-4"></div>
+              <div className="h-2 bg-gray-200 rounded-full  max-w-[1100px] mb-2.5"></div>
+
+              <span className="sr-only">Loading...</span>
+            </div>
+            <div role="status" className="max-w-sm animate-pulse">
+              <div className="h-2.5 bg-gray-200 rounded-full  w-[500px] mb-4"></div>
+              <div className="h-2 bg-gray-200 rounded-full  max-w-[1100px] mb-2.5"></div>
+
               <span className="sr-only">Loading...</span>
             </div>
           </div>
@@ -465,7 +479,7 @@ const Tasks = () => {
                                 <p className="text-gray-500">{formData.name}</p>
                                 <p className="text-gray-500">
                                   {formData.email}
-                                </p>  
+                                </p>
                               </div>
                             </div>
                           </div>
@@ -753,6 +767,22 @@ const Tasks = () => {
                     </div>
                   ) : null
                 )}
+
+                {toBeFirstReviewedExamForms.length === 0 &&
+                  toBeSecondReviewedExamForms.length === 0 &&
+                  toBeFirstReviewedPaperMarkingForms.length === 0 &&
+                  toBeSecondReviewedPaperMarkingForms.length === 0 && (
+                    <div className="flex flex-col gap-5 justify-center items-center mx-10  h-full">
+                      <img
+                        src={formImage}
+                        alt="no forms"
+                        className=" w-[400px]"
+                      />
+                      <h2 className="text-ms font-normal text-slate-500">
+                        No forms are submitted for your review
+                      </h2>
+                    </div>
+                  )}
               </div>
             </div>
           </div>

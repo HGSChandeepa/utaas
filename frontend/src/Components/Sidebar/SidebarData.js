@@ -14,12 +14,12 @@ export const SidebarData = [
     icon: RxDashboard,
     cName: "nav-text",
   },
-  {
-    title: "Add New",
-    path: "/myactivity",
-    icon: FiActivity,
-    cName: "nav-text",
-  },
+  // {
+  //   title: "Add New",
+  //   path: "/myactivity",
+  //   icon: FiActivity,
+  //   cName: "nav-text",
+  // },
   {
     title: "Tasks",
     path: "/tasks",

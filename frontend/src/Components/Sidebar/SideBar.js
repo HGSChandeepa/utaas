@@ -26,7 +26,13 @@ const SideBar = () => {
           } duration-500 text-black-100 px-4`}
         >
           <div className="py-3 flex justify-between">
-            <h1 className={`${!open && "hidden"} ml-2 text-3xl text-ellipsis text-[#4743E0] font-serif`}>UTAAS</h1>
+            <h1
+              className={`${
+                !open && "hidden"
+              } ml-2 text-3xl text-ellipsis text-[#4743E0] font-semibold `}
+            >
+              LOGO
+            </h1>
             <HiMenu
               size={26}
               className={`${!open} ml-1 cursor-pointer  justify-end`}
@@ -43,15 +49,12 @@ const SideBar = () => {
                 key={i}
                 className={` ${
                   menu.margin && "mt-5"
-                } group flex items-center text-sm border rounded-xl gap-4 font-medium p-2 hover:bg-blue-200 hover:text-blue-500`}
+                } group flex items-center text-md opacity-70  rounded-xl gap-4 font-normal p-2 hover:bg-blue-200 hover:text-blue-500`}
               >
                 <div>{React.createElement(menu.icon, { size: "20" })}</div>
                 <h2
-                  style={{
-                    transitionDelay: `${i + 3}00ms`,
-                  }}
                   className={`whitespace-pre duration-500 ${
-                    !open && "opacity-0 translate-x-28 overflow-hidden"
+                    !open && "opacity-0 translate-x-28 overflow-hidden "
                   }`}
                 >
                   {menu.title}

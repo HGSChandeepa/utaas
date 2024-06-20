@@ -127,14 +127,36 @@ const Progress = () => {
   );
 
   return (
-    <div className="flex flex-row min-h-screen bg-gray-100">
-      <SideBar />
-      <div className="flex flex-col flex-grow p-6">
+    <div className="flex flex-row min-h-screen ">
+      <div className="place-items-start align-top items-center">
+        <SideBar />
+      </div>
+      <div className="flex flex-col flex-grow p-10">
         <div className="flex flex-col mb-6">
-          <div className="bg-yellow-100 text-yellow-800 w-fit flex gap-2 font-medium px-4 py-0.5 rounded-full text-md">
+          <div
+            className={`font-medium px-2.5 py-0.5 rounded-full text-md w-fit ${
+              userRole === "HOD"
+                ? "bg-blue-100 text-blue-800"
+                : userRole === "Admin"
+                ? "bg-green-100 text-green-800"
+                : userRole === "Lecturer"
+                ? "bg-yellow-100 text-yellow-800"
+                : ""
+            }`}
+          >
             {userRole} <span>Account</span>
           </div>
-          <h2 className="text-3xl font-bold text-gray-700 mt-4">
+          <h2
+            className={`text-2xl font-semibold ${
+              userRole === "HOD"
+                ? "text-blue-500"
+                : userRole === "Admin"
+                ? "text-green-500"
+                : userRole === "Lecturer"
+                ? "text-yellow-500"
+                : ""
+            }`}
+          >
             Your Submitted Forms
           </h2>
           <p className="text-gray-600 mt-2">
@@ -189,6 +211,17 @@ const Progress = () => {
               ))}
             </div>
 
+            {examDutyForms.length === 0 && (
+              <div className="bg-white py-6 opacity-60 rounded-lg  mt-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  No Exam Duty Forms Found
+                </h3>
+                <p className="text-gray-600 mb-2">
+                  You have not submitted any exam duty forms yet.
+                </p>
+              </div>
+            )}
+
             <h3 className="text-2xl font-semibold text-gray-700 mt-6">
               Paper Marking Forms
             </h3>
@@ -210,6 +243,17 @@ const Progress = () => {
                   </a>
                 </div>
               ))}
+
+              {paperMarkingForms.length === 0 && (
+                <div className="bg-white py-6 opacity-60 rounded-lg  mt-6">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                    No Paper Marking Forms Found
+                  </h3>
+                  <p className="text-gray-600 mb-2">
+                    You have not submitted any paper marking forms yet.
+                  </p>
+                </div>
+              )}
             </div>
           </>
         )}

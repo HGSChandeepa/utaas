@@ -10,6 +10,7 @@ import { getExamForms } from "../../services/progress/progress_exam_duty";
 const Dashboard = () => {
   const [userData, setUserData] = useState(null);
   const [userRole, setUserRole] = useState(null);
+  const [Loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -32,6 +33,8 @@ const Dashboard = () => {
           .catch((error) => {
             console.error("Error getting document:", error);
           });
+
+        setLoading(false);
       } else {
         setUserData(null);
       }
@@ -55,57 +58,40 @@ const Dashboard = () => {
         <SideBar />
       </div>
 
-      <div className="flex flex-col p-4">
-        <div className="flex flex-col mx-5">
-          <div className="flex flex-row justify-between items-center">
-            <div>
-              {userData ? (
-                <div className=" flex gap-3 justify-between">
-                  <p className=" text-2xl text-gray-500">Hello</p>
-                  <h2
-                    className={`text-2xl font-semibold ${
-                      userRole === "HOD"
-                        ? "text-blue-500"
-                        : userRole === "Admin"
-                        ? "text-green-500"
-                        : userRole === "Lecturer"
-                        ? "text-yellow-500"
-                        : ""
-                    }`}
-                  >
-                    {userData && userData.userName}
-                  </h2>
+      <div className="flex flex-col p-10">
+        {Loading ? (
+          <div role="status" class="max-w-sm animate-pulse">
+            <div class="h-2.5 bg-gray-200 rounded-full  w-48 mb-4"></div>
+            <div class="h-2 bg-gray-200 rounded-full  max-w-[360px] mb-2.5"></div>
 
-                  <p className=" text-2xl text-gray-500"> Welcome Back!</p>
+            <span class="sr-only">Loading...</span>
+          </div>
+        ) : (
+          <div className="flex flex-col ">
+            <div className="flex flex-row justify-between items-center">
+              <div>
+                <div
+                  className={`font-medium px-2.5 py-0.5 rounded-full text-md ${
+                    userRole === "HOD"
+                      ? "bg-blue-100 text-blue-800"
+                      : userRole === "Admin"
+                      ? "bg-green-100 text-green-800"
+                      : userRole === "Lecturer"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : ""
+                  }`}
+                >
+                  {userRole} Account
                 </div>
-              ) : (
-                <span className="flex flex-col justify-center items-center">
-                  <div className="animate-spin flex justify-center items-center rounded-full h-12 w-12 border-t-2 border-s-2 border-b-1 border-[#4743E0]"></div>
-                  Loading...
-                </span>
-              )}
-            </div>
-            <div>
-              <div
-                className={`font-medium px-2.5 py-0.5 rounded-full text-md ${
-                  userRole === "HOD"
-                    ? "bg-blue-100 text-blue-800"
-                    : userRole === "Admin"
-                    ? "bg-green-100 text-green-800"
-                    : userRole === "Lecturer"
-                    ? "bg-yellow-100 text-yellow-800"
-                    : ""
-                }`}
-              >
-                {userRole} Account
               </div>
             </div>
           </div>
-        </div>
+        )}
+
         {/* applicable forms */}
 
         <div>
-          <section className=" mt-6 px-16">
+          <section className=" mt-6 ">
             <div className="flex flex-row gap-10">
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-2">
@@ -133,7 +119,7 @@ const Dashboard = () => {
                   </p>
                 </div>
                 {/* cards */}
-                <div className=" mt-5 grid grid-cols-3 gap-5">
+                <div className=" mt-5 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
                   <a href="/dashboard/exam">
                     <SampleCards
                       title="Exam Duty Forms"
