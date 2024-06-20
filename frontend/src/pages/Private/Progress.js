@@ -147,7 +147,7 @@ const Progress = () => {
             {userRole} <span>Account</span>
           </div>
           <h2
-            className={`text-2xl font-semibold ${
+            className={`text-2xl font-semibold mt-4 ${
               userRole === "HOD"
                 ? "text-blue-500"
                 : userRole === "Admin"
@@ -212,7 +212,7 @@ const Progress = () => {
             </div>
 
             {examDutyForms.length === 0 && (
-              <div className="bg-white py-6 opacity-60 rounded-lg  mt-6">
+              <div className="bg-white py-6 opacity-40 rounded-lg  mt-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
                   No Exam Duty Forms Found
                 </h3>
@@ -245,7 +245,7 @@ const Progress = () => {
               ))}
 
               {paperMarkingForms.length === 0 && (
-                <div className="bg-white py-6 opacity-60 rounded-lg  mt-6">
+                <div className="bg-white py-6 opacity-40 w-full rounded-lg  mt-6">
                   <h3 className="text-xl font-semibold text-gray-800 mb-2">
                     No Paper Marking Forms Found
                   </h3>

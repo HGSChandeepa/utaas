@@ -164,14 +164,14 @@ const FormComponentExamDuty = () => {
   };
 
   return (
-    <div className="w-[1000px] mx-auto my-8 p-6 bg-slate-300 rounded-md border-2">
-      <h2 className="text-2xl font-semibold text-blue-600 border-b-4">
-        Exam Duties
+    <div className="w-full  mx-auto my-8 p-6 rounded-md border-2 ">
+      <h2 className="text-2xl font-semibold text-blue-600 border-b-2 mb-8">
+        Exam Duties payments Form
       </h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label
-            className="block text-gray-600 font-semibold mb-2"
+            className="block text-gray-900 font-normal mb-2"
             htmlFor="voucherNumber"
           >
             Voucher Number
@@ -182,13 +182,13 @@ const FormComponentExamDuty = () => {
             name="voucherNumber"
             value={formData.voucherNumber}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full px-4 mb-2 py-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
 
         <div className="mb-4">
           <label
-            className="block text-gray-600 font-semibold mb-2"
+            className="block text-gray-900 font-normal mb-2"
             htmlFor="date"
           >
             Date
@@ -199,13 +199,13 @@ const FormComponentExamDuty = () => {
             name="date"
             value={formData.date}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
 
         <div className="mb-4">
           <label
-            className="block text-gray-600 font-semibold mb-2"
+            className="block text-gray-900 font-normal mb-2"
             htmlFor="currencyType"
           >
             Currency Type
@@ -216,13 +216,13 @@ const FormComponentExamDuty = () => {
             name="currencyType"
             value={formData.currencyType}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full px-4 py-2  mb-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
 
         <div className="mb-4">
           <label
-            className="block text-gray-600 font-semibold mb-2"
+            className="block text-gray-900 font-normal mb-2"
             htmlFor="noOfCheques"
           >
             No. Of Cheques
@@ -233,13 +233,13 @@ const FormComponentExamDuty = () => {
             name="noOfCheques"
             value={formData.noOfCheques}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
 
         <div className="mb-4">
           <label
-            className="block text-gray-600 font-semibold mb-2"
+            className="block text-gray-900 font-normal mb-2"
             htmlFor="name"
           >
             Name
@@ -250,13 +250,13 @@ const FormComponentExamDuty = () => {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
 
         <div className="mb-4">
           <label
-            className="block text-gray-600 font-semibold mb-2"
+            className="block text-gray-900 font-normal mb-2"
             htmlFor="email"
           >
             Email
@@ -267,13 +267,13 @@ const FormComponentExamDuty = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full mb-2 px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
 
         <div className="mb-4">
           <label
-            className="block text-gray-600 font-semibold mb-2"
+            className="block text-gray-900 font-normal mb-2"
             htmlFor="post"
           >
             Post
@@ -284,13 +284,13 @@ const FormComponentExamDuty = () => {
             name="post"
             value={formData.post}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full px-4 mb-2 py-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
 
         <div className="mb-4">
           <label
-            className="block text-gray-600 font-semibold mb-2"
+            className="block text-gray-900 font-normal mb-2"
             htmlFor="reservedAddress"
           >
             The Reserved Address
@@ -301,13 +301,13 @@ const FormComponentExamDuty = () => {
             name="reservedAddress"
             value={formData.reservedAddress}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full mb-2 px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
 
         <div className="mb-4">
           <label
-            className="block text-gray-600 font-semibold mb-2"
+            className="block text-gray-900 font-normal mb-2"
             htmlFor="examinationName"
           >
             Examination Name
@@ -318,13 +318,13 @@ const FormComponentExamDuty = () => {
             name="examinationName"
             value={formData.examinationName}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full mb-2 px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
 
         <div className="mb-4">
           <label
-            className="block text-gray-600 font-semibold mb-2"
+            className="block text-gray-900 font-normal mb-2"
             htmlFor="examinationHall"
           >
             Examination Hall
@@ -335,13 +335,13 @@ const FormComponentExamDuty = () => {
             name="examinationHall"
             value={formData.examinationHall}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full mb-2 px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
 
         <div className="mb-4">
           <label
-            className="block text-gray-600 font-semibold mb-2"
+            className="block text-gray-900 font-normal mb-2"
             htmlFor="completedExamDuty"
           >
             Completed Exam Duty
@@ -352,18 +352,19 @@ const FormComponentExamDuty = () => {
             name="completedExamDuty"
             value={formData.completedExamDuty}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+            className="w-full mb-5 px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
           />
         </div>
+        <hr />
 
-        <h3 className="text-lg font-semibold text-gray-700 mb-2">
+        <h3 className="text-lg font-semibold text-gray-700 mb-5 mt-5">
           Fill the table accordingly
         </h3>
         {formData.tableEntries.map((entry, index) => (
           <div key={index} className="mb-4 border p-4 rounded-md">
             <div className="flex justify-between items-center">
               <label
-                className="block text-gray-600 font-semibold mb-2"
+                className="block text-gray-900 font-normal mb-2"
                 htmlFor={`date-${index}`}
               >
                 Date
@@ -379,7 +380,7 @@ const FormComponentExamDuty = () => {
             </div>
             <div className="flex justify-between items-center mt-2">
               <label
-                className="block text-gray-600 font-semibold mb-2"
+                className="block text-gray-900 font-normal mb-2"
                 htmlFor={`startTime-${index}`}
               >
                 Start Time
@@ -395,7 +396,7 @@ const FormComponentExamDuty = () => {
             </div>
             <div className="flex justify-between items-center mt-2">
               <label
-                className="block text-gray-600 font-semibold mb-2"
+                className="block text-gray-900 font-normal mb-2"
                 htmlFor={`endTime-${index}`}
               >
                 End Time
@@ -411,7 +412,7 @@ const FormComponentExamDuty = () => {
             </div>
             <div className="flex justify-between items-center mt-2">
               <label
-                className="block text-gray-600 font-semibold mb-2"
+                className="block text-gray-900 font-normal mb-2"
                 htmlFor={`amountToBePaid-${index}`}
               >
                 Amount to be Paid
@@ -437,12 +438,14 @@ const FormComponentExamDuty = () => {
         <button
           type="button"
           onClick={addTableRow}
-          className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:shadow-outline-gray"
+          className="bg-gray-500 mb-5 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:shadow-outline-gray"
         >
           New+
         </button>
 
-        <div className="mt-4">
+        <hr />
+
+        <div className="mt-16">
           <div className="flex items-center">
             <input
               type="checkbox"
@@ -461,7 +464,7 @@ const FormComponentExamDuty = () => {
 
         <div className="mt-4">
           <label
-            className="block text-gray-600 font-semibold mb-2"
+            className="block text-gray-900 font-normal mb-2"
             htmlFor="totalAmount"
           >
             Total Amount

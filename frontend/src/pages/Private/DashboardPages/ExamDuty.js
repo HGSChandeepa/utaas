@@ -5,6 +5,7 @@ import FormComponentExamDuty from "../../../Components/forms/exam_duty/ExamDuty"
 import { auth } from "../../../config/firebase_configure";
 import { doc, getDoc } from "firebase/firestore";
 import { firestore } from "../../../config/firebase_configure";
+import { uorLogo } from "../../../assets/index";
 
 function ExamDuty() {
   const [userData, setUserData] = useState(null);
@@ -51,17 +52,24 @@ function ExamDuty() {
               <div className="bg-yellow-100 text-yellow-800 w-40 flex gap-2 font-medium px-4 py-0.5 rounded-full text-md">
                 {userRole} <span>Account</span>
               </div>
-              <h2 className="text-2xl font-semibold text-yellow-500 ">
-                Here Are Some Forms Submited By You
-              </h2>
-              <p className="text-gray-500 ">
-                Apply for leave by filling in the form below and submitting it
-                to your department head. You will be notified of the status of
-                your application. And also, you can apply for a loan by filling
-                in the form below and submitting it to your department head. You
-                will be notified of the status of your application.
-              </p>
-              <div className="grid grid-cols-2">
+
+              <div className=" flex p-6 items-center justify-center gap-7">
+                <div>
+                  <img src={uorLogo} alt="uni logo" className="w-0 md:w-32" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-semibold text-yellow-500 ">
+                    Exam Duty payment form from University Of Ruhuna
+                  </h2>
+                  <p className="text-gray-500 ">
+                    Please fill the form below to pay the exam duty fee and
+                    submit the you can track the status of your payment and get
+                    the receipt from the dashboard for this please visite the
+                    progress page, Thank you.
+                  </p>
+                </div>
+              </div>
+              <div className="p-5 md:px-20 lg:px-28">
                 <FormComponentExamDuty />
               </div>
             </div>
