@@ -196,7 +196,7 @@ function ExamDutyById() {
   return (
     <div>
       <div>
-        <div className="flex gap-10">
+        <div className="flex gap-10 w-full">
           <div>
             <div className="place-items-start align-top items-center h-full">
               <SideBar />
@@ -228,7 +228,7 @@ function ExamDutyById() {
                 </h2>
               )}
             </section>
-            <div className="grid grid-cols-2">
+            <div className="grid grid-cols-2 ">
               <form
                 onSubmit={handleSubmit}
                 className="mb-5 border-2 p-10 rounded-lg border-gray-200 bg-slate-50"
@@ -238,7 +238,7 @@ function ExamDutyById() {
                     className="block text-gray-600 font-semibold mb-2"
                     htmlFor="voucherNumber"
                   >
-                    Voucher Number
+                    Voucher Number 
                   </label>
                   <input
                     type="text"

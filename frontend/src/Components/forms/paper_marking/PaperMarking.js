@@ -220,11 +220,45 @@ const FormComponentPaperMarking = () => {
     }
   };
 
+  //add the form to frequently accessed forms collection in the firebase firestore
+  const addFormToFrequent = async () => {
+    try {
+      await addDoc(collection(firestore, "frequently_accessed_forms"), {
+        formData,
+        form_name: "Paper Marking Payment Form",
+        form_description:
+          "Form for paper  duty payments for staff members of RUH and EIE department.This is the frequently accessed form. So you can add this form to your frequently accessed forms.And you can access this form easily.",
+      });
+      toast.success("Form added to frequently accessed forms");
+    } catch (error) {
+      toast.error(
+        "Error adding form to frequently accessed forms: " + error.message
+      );
+    }
+  };
+
   return (
     <div className="w-[1000px] mx-auto mt-8 p-6 bg-gray-300 rounded-md shadow-md">
-      <h2 className="text-2xl font-semibold text-blue-600 border-b-4 mb-4">
-        Paper Marking Payments
-      </h2>
+      <div className=" flex justify-between items-left flex-col">
+        <h2 className="text-2xl font-semibold text-blue-600 border-b-2 mb-2">
+          Paper Marking Payment Form
+        </h2>
+        <div className=" my-8 py-4 space-y-2">
+          <p>
+            If this form is frequently used you can add this form in to your
+            frequently accesed section{" "}
+          </p>
+
+          <button
+            onClick={addFormToFrequent}
+            className="mb-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:shadow-outline-blue active:bg-green-800"
+          >
+            Add to Frequent
+          </button>
+
+          <hr />
+        </div>
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>

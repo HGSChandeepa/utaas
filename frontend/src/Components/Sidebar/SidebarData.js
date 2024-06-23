@@ -33,7 +33,7 @@ export const SidebarData = [
     cName: "nav-text",
   },
   {
-    title: "Favorites",
+    title: "Frequent",
     path: "/favorites",
     icon: GrFavorite,
     cName: "nav-text",

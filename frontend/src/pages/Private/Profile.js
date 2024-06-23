@@ -95,7 +95,7 @@ const ProfilePage = () => {
           })
           .catch((error) => {
             console.log("Error in deleting", error.message);
-            toast.error("Error in deleting existing profile picture.");
+            // toast.error("Error in deleting existing profile picture.");
           });
       }
       uploadBytes(imageRef, profilePic)
