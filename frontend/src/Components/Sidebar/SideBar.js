@@ -34,15 +34,15 @@ const SideBar = () => {
               LOGO
             </h1>
             <HiMenu
-              size={26}
-              className={`${!open} ml-1 cursor-pointer  justify-end`}
+              size={22}
+              className={`${!open} ml-1 cursor-pointer  justify-end opacity-50 `}
               style={{
                 transitionDelay: `${3}00ms`,
               }}
               onClick={() => setOpen(!open)}
             />
           </div>
-          <div className="mt-4 flex flex-col gap-4 relative">
+          <div className="mt-5 flex flex-col gap-1 relative">
             {SidebarData.map((menu, i) => (
               <Link
                 to={menu.path}

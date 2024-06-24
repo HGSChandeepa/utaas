@@ -112,9 +112,13 @@ export const approveFirstReviewerService = async (formId) => {
     try {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
-        message: `Form ${formId} has been approved by the first reviewer.`,
+        message: `This form ${formId} has been approved by the first reviewer.The form is now in the second reviewer's queue. and will be reviewed soon. If you have any questions, please contact the reviewer directly.`,
+        editedBy: examFormDoc.data().first_reciver_email,
+        role: examFormDoc.data().first_reciver_role,
         formData: examFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
+        typeof: "approved",
+        form_type: "Exam Duty Payment Form",
       });
     } catch (error) {
       console.error("Error adding notification document: ", error);
@@ -142,9 +146,13 @@ export const approveSecondReviewerService = async (formId) => {
     try {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
-        message: `Form ${formId} has been approved by the second reviewer.`,
+        message: `This form ${formId} has been approved by the second reviewer.The form is now in the second reviewer's queue. and will be reviewed soon. If you have any questions, please contact the reviewer directly.`,
+        editedBy: examFormDoc.data().second_reciver_email,
+        role: examFormDoc.data().second_reciver_role,
         formData: examFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
+        typeof: "approved",
+        form_type: "Exam Duty Payment Form",
       });
     } catch (error) {
       console.error("Error adding notification document: ", error);
@@ -176,9 +184,13 @@ export const rejectFirstReviewerService = async (formId) => {
     try {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
-        message: `Form ${formId} has been rejected by the first reviewer.`,
+        message: `This form ${formId} has been rejected by the first reviewer.The form is now in the second reviewer's queue. and will be reviewed soon. If you have any questions, please contact the reviewer directly.`,
+        editedBy: examFormDoc.data().first_reciver_email,
+        role: examFormDoc.data().first_reciver_role,
         formData: examFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
+        typeof: "rejected",
+        form_type: "Exam Duty Payment Form",
       });
     } catch (error) {
       console.error("Error adding notification document: ", error);
@@ -210,9 +222,13 @@ export const rejectSecondReviewerService = async (formId) => {
     try {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
-        message: `Form ${formId} has been rejected by the second reviewer.`,
+        message: `This form ${formId} has been rejected by the second reviewer.The form is now in the second reviewer's queue. and will be reviewed soon. If you have any questions, please contact the reviewer directly.`,
+        editedBy: examFormDoc.data().second_reciver_email,
+        role: examFormDoc.data().second_reciver_role,
         formData: examFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
+        typeof: "rejected",
+        form_type: "Exam Duty Payment Form",
       });
     } catch (error) {
       console.error("Error adding notification document: ", error);
@@ -243,9 +259,13 @@ export const editedByFirstReviewerService = async (formId) => {
     try {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
-        message: `Form ${formId} has been edited by the first reviewer.`,
+        message: `This form ${formId} has been edited by the first reviewer.The form is now in the second reviewer's queue. and will be reviewed soon. If you have any questions, please contact the reviewer directly.`,
+        editedBy: examFormDoc.data().first_reciver_email,
+        role: examFormDoc.data().first_reciver_role,
         formData: examFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
+        typeof: "edited",
+        form_type: "Exam Duty Payment Form",
       });
       console.log("Form edited by the first reviewer.");
     } catch (error) {
@@ -277,9 +297,13 @@ export const editedBySecondReviewerService = async (formId) => {
     try {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
-        message: `Form ${formId} has been edited by the second reviewer.`,
+        message: `This form ${formId} has been edited by the second reviewer.The form is now in the second reviewer's queue. and will be reviewed soon. If you have any questions, please contact the reviewer directly.`,
+        editedBy: examFormDoc.data().second_reciver_email,
+        role: examFormDoc.data().second_reciver_role,
         formData: examFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
+        typeof: "editded",
+        form_type: "Exam Duty Payment Form",
       });
     } catch (error) {
       console.error("Error adding notification document: ", error);
@@ -293,15 +317,20 @@ export const editedBySecondReviewerService = async (formId) => {
 
 //function to get all the notifications for the current user
 export const getNotifications = async (email) => {
-  const notifications = [];
-  const notificationsCollection = collection(firestore, "notifications");
-  const notificationsSnapshot = await getDocs(notificationsCollection);
-  notificationsSnapshot.forEach((doc) => {
-    const notificationData = doc.data();
-    if (notificationData.formData.email.trim() === email.trim()) {
-      notifications.push(notificationData);
-    }
-  });
+  try {
+    const notifications = [];
+    const notificationsCollection = collection(firestore, "notifications");
+    const notificationsSnapshot = await getDocs(notificationsCollection);
+    notificationsSnapshot.forEach((doc) => {
+      const notificationData = doc.data();
+      if (notificationData.formData.email.trim() === email.trim()) {
+        notifications.push(notificationData);
+      }
+    });
 
-  return notifications;
+    return notifications;
+  } catch (error) {
+    console.error("Error getting notifications: ", error);
+    return [];
+  }
 };

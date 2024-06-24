@@ -28,6 +28,7 @@ import { formImage } from "../../../src/assets/index";
 const Tasks = () => {
   const [userData, setUserData] = useState(null);
   const [userRole, setUserRole] = useState(null);
+  const [approverdExambyfist, setApproverdExambyfist] = useState(0);
 
   // for exam duty forms
   const [toBeFirstReviewedExamForms, setToBeFirstReviewedExamForms] = useState(
@@ -131,6 +132,7 @@ const Tasks = () => {
     try {
       await approveFirstReviewerService(formId);
       toast.success("Form approved successfully");
+      window.location.reload();
     } catch (error) {
       console.log("Error:", error);
       toast.error("An error occurred, please try again");
@@ -142,6 +144,7 @@ const Tasks = () => {
     try {
       await approveSecondReviewerService(formId);
       toast.success("Form approved successfully");
+      window.location.reload();
     } catch (error) {
       console.log("Error:", error);
       toast.error("An error occurred, please try again");
@@ -153,6 +156,7 @@ const Tasks = () => {
     try {
       await rejectFirstReviewerService(formId);
       toast.success("Form rejected successfully");
+      window.location.reload();
     } catch (error) {
       console.log("Error:", error);
       toast.error("An error occurred, please try again");
@@ -164,6 +168,7 @@ const Tasks = () => {
     try {
       await rejectSecondReviewerService(formId);
       toast.success("Form rejected successfully");
+      window.location.reload();
     } catch (error) {
       console.log("Error:", error);
       toast.error("An error occurred, please try again");
@@ -175,6 +180,7 @@ const Tasks = () => {
     try {
       await approveFirstReviewerServicePaperMarking(formId);
       toast.success("Form approved successfully");
+      window.location.reload();
     } catch (error) {
       console.log("Error:", error);
       toast.error("An error occurred, please try again");
@@ -186,6 +192,7 @@ const Tasks = () => {
     try {
       await approveSecondReviewerServicePaperMarking(formId);
       toast.success("Form approved successfully");
+      window.location.reload();
     } catch (error) {
       console.log("Error:", error);
       toast.error("An error occurred, please try again");
@@ -197,6 +204,7 @@ const Tasks = () => {
     try {
       await rejectFirstReviewerServicePaperMarking(formId);
       toast.success("Form rejected successfully");
+      window.location.reload();
     } catch (error) {
       console.log("Error:", error);
       toast.error("An error occurred, please try again");
@@ -208,6 +216,7 @@ const Tasks = () => {
     try {
       await rejectSecondReviewerServicePaperMarking(formId);
       toast.success("Form rejected successfully");
+      window.location.reload();
     } catch (error) {
       console.log("Error:", error);
       toast.error("An error occurred, please try again");
@@ -278,7 +287,8 @@ const Tasks = () => {
               <div>
                 {toBeFirstReviewedExamForms &&
                   toBeFirstReviewedExamForms.map((formData, index) =>
-                    formData.current_step === 2 ? (
+                    formData.current_step === 2 &&
+                    formData.rejected_by_first_reciver === false ? (
                       <div
                         key={index}
                         className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between gap-3 mt-5 hover:bg-slate-100 cursor-pointer transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-101"
@@ -292,7 +302,7 @@ const Tasks = () => {
                               <span className="flex items-center justify-center w-5 h-5 me-2 text-xs border border-blue-600 rounded-full shrink-0">
                                 1
                               </span>
-                              {formData.applicant_name}
+                              {formData.name}
 
                               <svg
                                 className="w-3 h-3 ms-2 sm:ms-4 rtl:rotate-180"
@@ -350,18 +360,22 @@ const Tasks = () => {
                           <div className="flex flex-row justify-between items-center ">
                             <div className="flex gap-2">
                               <div className="flex flex-col gap-1">
-                                <h2 className="text-xl font-semibold text-yellow-500">
+                                <h2 className="text-xl font-semibold text-blue-700">
                                   Exam Duty Form
                                 </h2>
-                                <div className="my-4">
-                                  <h2 className="text-lg text-slate-600 pb-4">
+                                <p className="text-blue-500">
+                                  Examination: {formData.examinationName}
+                                </p>
+                                <div className="my-1">
+                                  <h2 className="text-md text-black pb-4">
                                     Applicant Details
                                   </h2>
-                                  <p className="text-gray-500">
-                                    {formData.name}
+
+                                  <p className="text-gray-400 text-sm">
+                                    Applicant Name: {formData.name}
                                   </p>
-                                  <p className="text-gray-500">
-                                    {formData.email}
+                                  <p className="text-gray-400 text-sm">
+                                    Applicant Email: {formData.email}
                                   </p>
                                 </div>
                               </div>
@@ -403,7 +417,8 @@ const Tasks = () => {
                   )}
 
                 {toBeSecondReviewedExamForms.map((formData, index) =>
-                  formData.current_step === 3 ? (
+                  formData.current_step === 3 &&
+                  formData.rejected_by_second_reciver === false ? (
                     <div
                       key={index}
                       className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between gap-3 mt-5 hover:bg-slate-100 cursor-pointer transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-101"
@@ -521,7 +536,8 @@ const Tasks = () => {
 
                 {/* paper marking forms */}
                 {toBeFirstReviewedPaperMarkingForms.map((formData, index) =>
-                  formData.current_step === 2 ? (
+                  formData.current_step === 2 &&
+                  formData.approveByFirstReviewerPaperMarking === false ? (
                     <div
                       key={index}
                       className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between gap-3 mt-5 hover:bg-slate-100 cursor-pointer transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-101"
@@ -648,7 +664,9 @@ const Tasks = () => {
                 )}
 
                 {toBeSecondReviewedPaperMarkingForms.map((formData, index) =>
-                  formData.current_step === 3 ? (
+                  formData.current_step === 3 &&
+                  formData.approveSecondReviewerServicePaperMarking ===
+                    false ? (
                     <div
                       key={index}
                       className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between gap-3 mt-5 hover:bg-slate-100 cursor-pointer transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-101"
@@ -772,16 +790,16 @@ const Tasks = () => {
                   toBeSecondReviewedExamForms.length === 0 &&
                   toBeFirstReviewedPaperMarkingForms.length === 0 &&
                   toBeSecondReviewedPaperMarkingForms.length === 0 && (
-                    <div className="flex flex-col gap-5 justify-center items-center mx-10  h-full">
-                      <img
-                        src={formImage}
-                        alt="no forms"
-                        className=" w-[400px]"
-                      />
-                      <h2 className="text-ms font-normal text-slate-500">
-                        No forms are submitted for your review
-                      </h2>
-                    </div>
+                    <div className="bg-white flex flex-col items-center justify-center  rounded-md p-4">
+                    <img
+                      src={formImage}
+                      alt="notifications"
+                      className="w-[400px]"
+                    />
+                    <h1 className="text-md font-normal text-center opacity-40">
+                      No forms to review at the moment ,Please check back later!
+                    </h1>
+                  </div>
                   )}
               </div>
             </div>

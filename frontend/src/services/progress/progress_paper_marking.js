@@ -117,9 +117,13 @@ export const approveFirstReviewerServicePaperMarking = async (formId) => {
     try {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
-        message: `Form ${formId} has been approved by the first reviewer.`,
+        message: `This form ${formId} has been approved by the first reviewer.The form is now in the second reviewer's queue. and will be reviewed soon. If you have any questions, please contact the reviewer directly.`,
+        editedBy: paperMarkingFormDoc.data().first_reciver_email,
+        role: paperMarkingFormDoc.data().first_reciver_role,
         formData: paperMarkingFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
+        typeof: "approved",
+        form_type: "Paper Marking Payment Form",
       });
     } catch (error) {
       console.error("Error adding notification document: ", error);
@@ -150,9 +154,13 @@ export const approveSecondReviewerServicePaperMarking = async (formId) => {
     try {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
-        message: `Form ${formId} has been approved by the second reviewer.`,
+        message: `This form ${formId} has been approved by the second reviewer.The form is now in the second reviewer's queue. and will be reviewed soon. If you have any questions, please contact the reviewer directly.`,
+        editedBy: paperMarkingFormDoc.data().second_reciver_email,
+        role: paperMarkingFormDoc.data().second_reciver_role,
         formData: paperMarkingFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
+        typeof: "approved",
+        form_type: "Paper Marking Payment Form",
       });
     } catch (error) {
       console.error("Error adding notification document: ", error);
@@ -187,9 +195,13 @@ export const rejectFirstReviewerServicePaperMarking = async (formId) => {
     try {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
-        message: `Form ${formId} has been rejected by the first reviewer.`,
+        message: `This form ${formId} has been rejected by the second reviewer.The form is now in the second reviewer's queue. and will be reviewed soon. If you have any questions, please contact the reviewer directly.`,
+        editedBy: paperMarkingFormDoc.data().first_reciver_email,
+        role: paperMarkingFormDoc.data().first_reciver_role,
         formData: paperMarkingFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
+        typeof: "rejected",
+        form_type: "Paper Marking Payment Form",
       });
     } catch (error) {
       console.error("Error adding notification document: ", error);
@@ -224,9 +236,13 @@ export const rejectSecondReviewerServicePaperMarking = async (formId) => {
     try {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
-        message: `Form ${formId} has been rejected by the second reviewer.`,
+        message: `This form ${formId} has been rejected by the second reviewer.The form is now in the second reviewer's queue. and will be reviewed soon. If you have any questions, please contact the reviewer directly.`,
+        editedBy: paperMarkingFormDoc.data().second_reciver_email,
+        role: paperMarkingFormDoc.data().second_reciver_role,
         formData: paperMarkingFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
+        typeof: "rejected",
+        form_type: "Paper Marking Payment Form",
       });
     } catch (error) {
       console.error("Error adding notification document: ", error);
@@ -260,9 +276,13 @@ export const editedByFirstReviewerServicePaperMarking = async (formId) => {
     try {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
-        message: `Form ${formId} has been edited by the first reviewer.`,
+        message: `This form ${formId} has been edited by the second reviewer.The form is now in the second reviewer's queue. and will be reviewed soon. If you have any questions, please contact the reviewer directly.`,
+        editedBy: paperMarkingFormDoc.data().first_reciver_email,
+        role: paperMarkingFormDoc.data().first_reciver_role,
         formData: paperMarkingFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
+        typeof: "edited",
+        form_type: "Paper Marking Payment Form",
       });
       console.log("Form edited by the first reviewer.");
     } catch (error) {
@@ -297,9 +317,13 @@ export const editedBySecondReviewerServicePaperMarking = async (formId) => {
     try {
       const notificationRef = collection(firestore, "notifications");
       await addDoc(notificationRef, {
-        message: `Form ${formId} has been edited by the second reviewer.`,
+        message: `This form ${formId} has been edited by the second reviewer.The form is now in the second reviewer's queue. and will be reviewed soon. If you have any questions, please contact the reviewer directly.`,
+        editedBy: paperMarkingFormDoc.data().second_reciver_email,
+        role: paperMarkingFormDoc.data().second_reciver_role,
         formData: paperMarkingFormDoc.data(), // Add form data to the notification
         timestamp: new Date(),
+        typeof: "edited",
+        form_type: "Paper Marking Payment Form",
       });
     } catch (error) {
       console.error("Error adding notification document: ", error);

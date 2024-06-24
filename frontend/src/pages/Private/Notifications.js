@@ -94,21 +94,38 @@ const Tasks = () => {
                   notifications.map((notification, index) => (
                     <div
                       key={index}
-                      className="bg-slate-100 shadow-md rounded-md p-4 mb-5"
+                      className="bg-white shadow-md rounded-md p-4 mb-5"
                     >
-                      <div className="flex justify-between items-center">
+                      <div className="flex justify-between items-center ">
                         <div>
-                          <h1 className="text-lg">
-                            {notification.formData.form_type}
+                          <h1 className="text-md font-semibold my-4">
+                            {notification.form_type}
                           </h1>
-                          <p className="text-gray-500">
+                          <p
+                            className={
+                              notification.typeof === "approved"
+                                ? "text-green-500 font-semibold text-md"
+                                : notification.typeof === "rejected"
+                                ? "text-red-500 ont-semibold text-md"
+                                : "text-yellow-500 font-semibold text-md"
+                            }
+                          >
+                            {notification.typeof}
+                          </p>
+                          <p className="text-gray-700 mb-3">
                             {notification.message}
                           </p>
-                        </div>
-                        <div>
-                          <button className="bg-green-500 text-white px-4 py-2 rounded-md">
-                            View
-                          </button>
+                          <p className="text-gray-500 text-sm">
+                            {notification.timestamp.toDate().toDateString()}
+                          </p>
+
+                          <p className="text-gray-500 text-sm">
+                            {notification.typeof +
+                              " by  " +
+                              notification.editedBy +
+                              " role is : " +
+                              notification.role}
+                          </p>
                         </div>
                       </div>
                     </div>
